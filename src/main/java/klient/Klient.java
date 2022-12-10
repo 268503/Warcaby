@@ -1,12 +1,16 @@
 package klient;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import klient.kontroler.Kontroler;
+import klient.model.Plansza;
+import klient.widok.PlanszaGUI;
 
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -23,6 +27,17 @@ public class Klient extends Application {
     @Override
     public void start(Stage scena) {
         String adresSerwera;
+        Thread watekKontrolera;
+
+        scena.setOnCloseRequest(wydarzenie -> {
+            try {
+                doSerwera.println("WYJDŹ");
+                // gniazdo.close();
+            } catch (Exception e) {
+
+            }
+        });
+
         final TextInputDialog wprowadzanieIpDialog = new TextInputDialog();
         wprowadzanieIpDialog.setTitle("IP");
         wprowadzanieIpDialog.setGraphic(null);
@@ -30,16 +45,10 @@ public class Klient extends Application {
         wprowadzanieIpDialog.showAndWait();
         adresSerwera = wprowadzanieIpDialog.getEditor().getText();
         final BorderPane korzen = new BorderPane();
-        final Button przyciskRuch = new Button("RUCH");
-        final Button przyciskWyjdz = new Button("WYJDŹ");
-        przyciskRuch.setOnAction(actionEvent -> {
-            doSerwera.println("RUCH 1 2 3 4 5");
-        });
-        przyciskWyjdz.setOnAction(actionEvent -> {
-            doSerwera.println("WYJDŹ");
-        });
-        korzen.setTop(przyciskRuch);
-        korzen.setBottom(przyciskWyjdz);
+        final Plansza plansza = new Plansza(8, 'c');
+        final PlanszaGUI planszaGUI = new PlanszaGUI(plansza);
+//        planszaGUI.autosize();
+        korzen.setCenter(planszaGUI);
         scena.setScene(new Scene(korzen, 720, 480));
         scena.show();
         try {
@@ -47,7 +56,8 @@ public class Klient extends Application {
             odSerwera = new Scanner(gniazdo.getInputStream());
             doSerwera = new PrintWriter(gniazdo.getOutputStream(), true);
             Kontroler kontroler = new Kontroler(odSerwera, doSerwera);
-            new Thread(kontroler).start();
+            watekKontrolera = new Thread(kontroler);
+            watekKontrolera.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
