@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Gra {
     private Gracz obecnyGracz;
 
-//    public Gracz pobierzObecnyGracz() {
+    //    public Gracz pobierzObecnyGracz() {
 //        return obecnyGracz;
 //    }
 //
@@ -30,7 +30,7 @@ public class Gra {
         private void ustaw() throws IOException {
             odGracza = new Scanner(gniazdo.getInputStream());
             doGracza = new PrintWriter(gniazdo.getOutputStream(), true);
-            doGracza.println("SIEMA");
+            doGracza.println("Witaj, Biały");
             if (kolor == 'B') {
                 obecnyGracz = this;
             }
@@ -44,6 +44,7 @@ public class Gra {
         private void przetwarzajKomendy() {
             while (odGracza.hasNextLine()) {
                 String komenda = odGracza.nextLine();
+                System.out.println(komenda);
                 if (komenda.startsWith("WYJDŹ")) {
                     return;
                 }
@@ -59,7 +60,7 @@ public class Gra {
                 ustaw();
                 przetwarzajKomendy();
             } catch (Exception e) {
-                System.out.println("jest źle");
+                System.out.println("cos jest nie tak z serwerem");
             } finally {
                 if (przeciwnik != null && przeciwnik.doGracza != null) {
                     przeciwnik.doGracza.println("PRZECIWNIK_WYSZEDŁ");

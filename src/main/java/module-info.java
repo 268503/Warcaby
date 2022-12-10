@@ -1,4 +1,4 @@
-module main {
+module klient {
     requires javafx.controls;
-    exports main;
+    exports klient;
 }
