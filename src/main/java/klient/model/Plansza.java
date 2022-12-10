@@ -21,6 +21,12 @@ public class Plansza {
                 }
                 else {
                     ustawPole(x, y, kolorLewyDolny);
+                    if (y < 3) {
+                        pobierzPole(x, y).ustawPionek(new Pionek('C'));
+                    }
+                    else if (y > 4) {
+                        pobierzPole(x, y).ustawPionek(new Pionek('B'));
+                    }
                 }
             }
         }
