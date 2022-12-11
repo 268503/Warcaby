@@ -6,6 +6,8 @@ import klient.model.Pole;
 
 public class PoleGUI extends Rectangle {
     // private Color kolorPolaGUI; //???
+//    private int wspolrzednaX;
+//    private int wspolrzednaY;
     private PionekGUI pionekGUI;
     public PoleGUI(Pole pole) {
         pionekGUI = new PionekGUI(pole.pobierzPionek());
@@ -15,8 +17,15 @@ public class PoleGUI extends Rectangle {
         else {
             setFill(Color.rgb(182, 134, 101));
         }
+
+        //TODO: skalowanie
         setHeight(60);
         setWidth(60);
+
+//        setOnMousePressed(zdarzenie -> {
+//
+//        } );
+
     }
 
     public PionekGUI pobierzPionekGUI() {

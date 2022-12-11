@@ -30,7 +30,7 @@ public class Gra {
         private void ustaw() throws IOException {
             odGracza = new Scanner(gniazdo.getInputStream());
             doGracza = new PrintWriter(gniazdo.getOutputStream(), true);
-            doGracza.println("Witaj, Biały");
+            doGracza.println("Witaj, " + kolor);
             if (kolor == 'B') {
                 obecnyGracz = this;
             }
@@ -50,6 +50,14 @@ public class Gra {
                 }
                 else if (komenda.startsWith("RUCH")) {
                     //TODO: zaimplementować obsługę komendy ruchu
+//                    if (check()) {
+//                        przeciwnik.wyslij(ruch)
+//                    }
+//                    else
+//                    {
+//                        gracz.wyslij(zlyruch)
+//                    }
+                    przeciwnik.doGracza.println("RUCH_PRZECIWNIKA " + komenda.substring(5));
                 }
             }
         }

@@ -43,4 +43,15 @@ public class Plansza {
     public int pobierzWymiar() {
         return wymiar;
     }
+
+    public void ruszPionek(char kolorPionka, int xPocz, int yPocz, int xKonc, int yKonc) {
+        if (pola[xPocz][yPocz].pobierzPionek() != null) {
+            if (kolorPionka == pola[xPocz][yPocz].pobierzPionek().pobierzKolor()) {
+                if (pola[xKonc][yKonc].pobierzPionek() == null) {
+                    pola[xKonc][yKonc].ustawPionek(pola[xPocz][yPocz].pobierzPionek());
+                    pola[xPocz][yPocz].ustawPionek(null);
+                }
+            }
+        }
+    }
 }
