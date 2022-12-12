@@ -12,17 +12,13 @@ public class PlanszaGUI extends GridPane {
     private final Kontroler kontroler;
     private int statusRuchu = 0;
     private int xPocz, yPocz;
-    public PlanszaGUI(Plansza plansza, Kontroler kontroler) {
+    public PlanszaGUI(Kontroler kontroler) {
         this.kontroler = kontroler;
-        this.plansza = plansza;
-        odswiez();
+        //odswiez();
     }
 
     public void odswiez() {
-        for (Node element : getChildren()) {
-            element = null;
-        }
-
+        getChildren().clear();
         for (int kolumna = 0; kolumna < plansza.pobierzWymiar(); kolumna++) {
             for (int wiersz = 0; wiersz < plansza.pobierzWymiar(); wiersz++) {
                 PoleGUI poleGUI = new PoleGUI(plansza.pobierzPole(kolumna, wiersz));
@@ -30,7 +26,7 @@ public class PlanszaGUI extends GridPane {
                 final int wspolrzednaY = wiersz;
                 poleGUI.setOnMousePressed(zdarzenie -> {
                     if (statusRuchu == 1) {
-                        plansza.ruszPionek(Kontroler.pobierzKolor(), xPocz, yPocz, wspolrzednaX, wspolrzednaY);
+                        //plansza.ruszPionek(Kontroler.pobierzKolor(), xPocz, yPocz, wspolrzednaX, wspolrzednaY);
                         statusRuchu = 0;
                         kontroler.wyslijKomende("RUCH " + xPocz + yPocz + wspolrzednaX + wspolrzednaY);
                         odswiez();
@@ -59,6 +55,9 @@ public class PlanszaGUI extends GridPane {
     // !!!
     public Plansza pobierzPlansze() {
         return plansza;
+    }
+    public void ustawPlansze(Plansza plansza) {
+        this.plansza = plansza;
     }
     // !!!
 

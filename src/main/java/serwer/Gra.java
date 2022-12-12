@@ -1,5 +1,7 @@
 package serwer;
 
+import serwer.model.Plansza;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -7,7 +9,7 @@ import java.util.Scanner;
 
 public class Gra {
     private Gracz obecnyGracz;
-
+    private Plansza plansza;
     //    public Gracz pobierzObecnyGracz() {
 //        return obecnyGracz;
 //    }
@@ -17,7 +19,7 @@ public class Gra {
 //    }
     class Gracz implements Runnable {
         private char kolor;
-        private Gracz przeciwnik;
+        private volatile Gracz przeciwnik;
         private Socket gniazdo;
         private Scanner odGracza;
         private PrintWriter doGracza;
@@ -33,6 +35,7 @@ public class Gra {
             doGracza.println("Witaj, " + kolor);
             if (kolor == 'B') {
                 obecnyGracz = this;
+                doGracza.println("PODAJ_WARIANT");
             }
             else {
                 przeciwnik = obecnyGracz;
@@ -57,7 +60,36 @@ public class Gra {
 //                    {
 //                        gracz.wyslij(zlyruch)
 //                    }
-                    przeciwnik.doGracza.println("RUCH_PRZECIWNIKA " + komenda.substring(5));
+                    if (obecnyGracz.kolor == kolor && plansza.ruszPionek(kolor, Integer.parseInt(komenda.substring(5, 6)), Integer.parseInt(komenda.substring(6, 7)), Integer.parseInt(komenda.substring(7, 8)), Integer.parseInt(komenda.substring(8, 9)))) {
+                        przeciwnik.doGracza.println("RUCH_PRZECIWNIKA " + komenda.substring(5));
+                        doGracza.println("POPRAWNY_RUCH" + komenda.substring(5));
+                        obecnyGracz = obecnyGracz.przeciwnik;
+                    }
+                    else {
+                        doGracza.println("NIEPOPRAWNY_RUCH");
+                    }
+                }
+                else if (komenda.startsWith("WARIANT")) { //TODO: nie wysylac info o wariancie jesli gra juz trwa
+                    char wariant = komenda.charAt(8);
+                    if (wariant == '1') {
+                        plansza = new Plansza(8, 'c');
+                        doGracza.println("STWORZ_WARIANT " + wariant);
+                        while (przeciwnik == null) {
+                            Thread.onSpinWait();
+                        }
+                        System.out.println("im out");
+                        przeciwnik.doGracza.println("STWORZ_WARIANT " + wariant);
+                        //TODO: gra.wystartuj()
+                    }
+                    else if (wariant == '2') {
+
+                    }
+                    else if (wariant == '3') {
+
+                    }
+                    else {
+                        doGracza.println("PODAJ_WARIANT");
+                    }
                 }
             }
         }
@@ -68,6 +100,7 @@ public class Gra {
                 ustaw();
                 przetwarzajKomendy();
             } catch (Exception e) {
+                e.printStackTrace();
                 System.out.println("cos jest nie tak z serwerem");
             } finally {
                 if (przeciwnik != null && przeciwnik.doGracza != null) {
