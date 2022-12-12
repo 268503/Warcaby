@@ -44,14 +44,20 @@ public class Plansza {
         return wymiar;
     }
 
-    public void ruszPionek(char kolorPionka, int xPocz, int yPocz, int xKonc, int yKonc) {
-        if (pola[xPocz][yPocz].pobierzPionek() != null) {
-            if (kolorPionka == pola[xPocz][yPocz].pobierzPionek().pobierzKolor()) {
-                if (pola[xKonc][yKonc].pobierzPionek() == null) {
-                    pola[xKonc][yKonc].ustawPionek(pola[xPocz][yPocz].pobierzPionek());
-                    pola[xPocz][yPocz].ustawPionek(null);
-                }
-            }
-        }
+    public void ruszPionek(int xPocz, int yPocz, int xKonc, int yKonc) {
+//        if (pola[xPocz][yPocz].pobierzPionek() != null) {
+//            if (kolorPionka == pola[xPocz][yPocz].pobierzPionek().pobierzKolor()) {
+//                if (pola[xKonc][yKonc].pobierzPionek() == null) {
+//                    pola[xKonc][yKonc].ustawPionek(pola[xPocz][yPocz].pobierzPionek());
+//                    pola[xPocz][yPocz].ustawPionek(null);
+//                }
+//            }
+//        }
+        pola[xKonc][yKonc].ustawPionek(pola[xPocz][yPocz].pobierzPionek());
+        pola[xPocz][yPocz].ustawPionek(null);
+    }
+
+    public void usunPionek(int x, int y) {
+        pola[x][y].ustawPionek(null);
     }
 }

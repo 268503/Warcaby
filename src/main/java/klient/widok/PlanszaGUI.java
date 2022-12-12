@@ -28,7 +28,7 @@ public class PlanszaGUI extends GridPane {
                     if (statusRuchu == 1) {
                         //plansza.ruszPionek(Kontroler.pobierzKolor(), xPocz, yPocz, wspolrzednaX, wspolrzednaY);
                         statusRuchu = 0;
-                        kontroler.wyslijKomende("RUCH " + xPocz + yPocz + wspolrzednaX + wspolrzednaY);
+                        kontroler.wyslijKomende("RUCH " + xPocz + " " + yPocz + " " + wspolrzednaX + " "  + wspolrzednaY);
                         odswiez();
                     }
 

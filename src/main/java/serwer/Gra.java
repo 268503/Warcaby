@@ -40,30 +40,42 @@ public class Gra {
             else {
                 przeciwnik = obecnyGracz;
                 przeciwnik.przeciwnik = this;
-                przeciwnik.doGracza.println("INFO Twój ruch");
+                // przeciwnik.doGracza.println("INFO Twój ruch");
+                doGracza.println("START");
+                przeciwnik.doGracza.println("START");
             }
         }
 
         private void przetwarzajKomendy() {
             while (odGracza.hasNextLine()) {
                 String komenda = odGracza.nextLine();
-                System.out.println(komenda);
+                System.out.println(kolor + " " + komenda);
                 if (komenda.startsWith("WYJDŹ")) {
                     return;
                 }
                 else if (komenda.startsWith("RUCH")) {
-                    //TODO: zaimplementować obsługę komendy ruchu
-//                    if (check()) {
-//                        przeciwnik.wyslij(ruch)
+                    String[] wspolrzedne = komenda.split(" ");
+                    int xPocz = Integer.parseInt(wspolrzedne[1]);
+                    int yPocz = Integer.parseInt(wspolrzedne[2]);
+                    int xKonc = Integer.parseInt(wspolrzedne[3]);
+                    int yKonc = Integer.parseInt(wspolrzedne[4]);
+
+//                    if (obecnyGracz.kolor == kolor && plansza.ruszPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
+//                        przeciwnik.doGracza.println("RUCH_PRZECIWNIKA " + komenda.substring(5));
+//                        doGracza.println("POPRAWNY_RUCH " + komenda.substring(5));
+//                        obecnyGracz = obecnyGracz.przeciwnik;
 //                    }
-//                    else
-//                    {
-//                        gracz.wyslij(zlyruch)
-//                    }
-                    if (obecnyGracz.kolor == kolor && plansza.ruszPionek(kolor, Integer.parseInt(komenda.substring(5, 6)), Integer.parseInt(komenda.substring(6, 7)), Integer.parseInt(komenda.substring(7, 8)), Integer.parseInt(komenda.substring(8, 9)))) {
-                        przeciwnik.doGracza.println("RUCH_PRZECIWNIKA " + komenda.substring(5));
-                        doGracza.println("POPRAWNY_RUCH" + komenda.substring(5));
-                        obecnyGracz = obecnyGracz.przeciwnik;
+                    if (obecnyGracz.kolor == kolor && plansza.ruszPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
+                        if (plansza.normalnyRuch(kolor, xPocz, yPocz, xKonc, yKonc)) {
+                            przeciwnik.doGracza.println("NORMALNY_RUCH_PRZECIWNIKA " + komenda.substring(5));
+                            doGracza.println("POPRAWNY_NORMALNY_RUCH " + komenda.substring(5));
+                            obecnyGracz = obecnyGracz.przeciwnik;
+                        }
+                        else if (plansza.zbijPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
+                            przeciwnik.doGracza.println("BICIE_RUCH_PRZECIWNIKA " + komenda.substring(5));
+                            doGracza.println("POPRAWNY_BICIE_RUCH " + komenda.substring(5));
+                            obecnyGracz = obecnyGracz.przeciwnik;
+                        }
                     }
                     else {
                         doGracza.println("NIEPOPRAWNY_RUCH");
@@ -73,12 +85,11 @@ public class Gra {
                     char wariant = komenda.charAt(8);
                     if (wariant == '1') {
                         plansza = new Plansza(8, 'c');
-                        doGracza.println("STWORZ_WARIANT " + wariant);
+                        doGracza.println("STWÓRZ_PLANSZĘ " + wariant);
                         while (przeciwnik == null) {
                             Thread.onSpinWait();
                         }
-                        System.out.println("im out");
-                        przeciwnik.doGracza.println("STWORZ_WARIANT " + wariant);
+                        przeciwnik.doGracza.println("STWÓRZ_PLANSZĘ " + wariant);
                         //TODO: gra.wystartuj()
                     }
                     else if (wariant == '2') {
@@ -109,7 +120,7 @@ public class Gra {
                 try {
                     gniazdo.close();
                 } catch (IOException e) {
-
+                    e.printStackTrace();
                 }
             }
 
