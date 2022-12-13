@@ -32,6 +32,7 @@ public class Kontroler implements Runnable {
             char kolorPrzeciwnika = (kolor == 'B' ? 'C' : 'B');
             while (odSerwera.hasNextLine()) {
                 odpowiedz = odSerwera.nextLine();
+                System.out.println("SERwer" + odpowiedz);
                 if (odpowiedz.startsWith("INFO")) {
                     //TODO: wyświetlić wiadomość
                     System.out.println(odpowiedz.substring(5));

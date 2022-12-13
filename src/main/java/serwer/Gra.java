@@ -1,6 +1,8 @@
 package serwer;
 
+import serwer.model.Pionek;
 import serwer.model.Plansza;
+import serwer.model.Pole;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -40,7 +42,6 @@ public class Gra {
             else {
                 przeciwnik = obecnyGracz;
                 przeciwnik.przeciwnik = this;
-                // przeciwnik.doGracza.println("INFO Twój ruch");
                 doGracza.println("START");
                 przeciwnik.doGracza.println("START");
             }
@@ -60,21 +61,33 @@ public class Gra {
                     int xKonc = Integer.parseInt(wspolrzedne[3]);
                     int yKonc = Integer.parseInt(wspolrzedne[4]);
 
-//                    if (obecnyGracz.kolor == kolor && plansza.ruszPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
-//                        przeciwnik.doGracza.println("RUCH_PRZECIWNIKA " + komenda.substring(5));
-//                        doGracza.println("POPRAWNY_RUCH " + komenda.substring(5));
-//                        obecnyGracz = obecnyGracz.przeciwnik;
-//                    }
                     if (obecnyGracz.kolor == kolor && plansza.ruszPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
-                        if (plansza.normalnyRuch(kolor, xPocz, yPocz, xKonc, yKonc)) {
+//                        if (!plansza.moznaDalejBic(kolor, xPocz, yPocz) && plansza.normalnyRuch(kolor, xPocz, yPocz, xKonc, yKonc)) {
+//                            przeciwnik.doGracza.println("NORMALNY_RUCH_PRZECIWNIKA " + komenda.substring(5));
+//                            doGracza.println("POPRAWNY_NORMALNY_RUCH " + komenda.substring(5));
+//                            obecnyGracz = obecnyGracz.przeciwnik;
+//                        }
+                        boolean bicieDostepne = false;
+                        for (Pionek pionek : plansza.pobierzPionki()) {
+                            if (plansza.moznaDalejBic(pionek.pobierzKolor(), pionek.pobierzWspolrzednaX(), pionek.pobierzWspolrzednaY()) && pionek.pobierzKolor() == obecnyGracz.kolor) {
+                                doGracza.println("INFO Masz bicie");
+                                bicieDostepne = true;
+                            }
+                        }
+                        if (!bicieDostepne && plansza.normalnyRuch(kolor, xPocz, yPocz, xKonc, yKonc)) {
                             przeciwnik.doGracza.println("NORMALNY_RUCH_PRZECIWNIKA " + komenda.substring(5));
                             doGracza.println("POPRAWNY_NORMALNY_RUCH " + komenda.substring(5));
                             obecnyGracz = obecnyGracz.przeciwnik;
                         }
-                        else if (plansza.zbijPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
+                        if (plansza.zbijPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
                             przeciwnik.doGracza.println("BICIE_RUCH_PRZECIWNIKA " + komenda.substring(5));
                             doGracza.println("POPRAWNY_BICIE_RUCH " + komenda.substring(5));
-                            obecnyGracz = obecnyGracz.przeciwnik;
+                            if (!plansza.moznaDalejBic(kolor, xKonc, yKonc)) {
+                                obecnyGracz = obecnyGracz.przeciwnik;
+                            }
+                            else {
+                                doGracza.println("INFO Kontynuuj bicie");
+                            }
                         }
                     }
                     else {
