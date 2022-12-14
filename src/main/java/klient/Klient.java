@@ -6,7 +6,6 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import klient.kontroler.Kontroler;
-import klient.model.Plansza;
 import klient.widok.PlanszaGUI;
 
 import java.io.PrintWriter;
@@ -31,13 +30,12 @@ public class Klient extends Application {
         scena.setOnCloseRequest(wydarzenie -> {
             try {
                 doSerwera.println("WYJDŹ");
-                // gniazdo.close();
             } catch (Exception e) {
 
             }
         });
 
-        final TextInputDialog wprowadzanieIpDialog = new TextInputDialog();
+        final TextInputDialog wprowadzanieIpDialog = new TextInputDialog("localhost");
         wprowadzanieIpDialog.setTitle("IP");
         wprowadzanieIpDialog.setGraphic(null);
         wprowadzanieIpDialog.setHeaderText("Podaj adres IP serwera:");
@@ -48,11 +46,12 @@ public class Klient extends Application {
             odSerwera = new Scanner(gniazdo.getInputStream());
             doSerwera = new PrintWriter(gniazdo.getOutputStream(), true);
             kontroler = new Kontroler(odSerwera, doSerwera);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+
+        }
         final BorderPane korzen = new BorderPane();
         final PlanszaGUI planszaGUI = new PlanszaGUI(kontroler);
         kontroler.ustawPlanszeGUI(planszaGUI);
-//        planszaGUI.autosize();
         korzen.setCenter(planszaGUI);
         scena.setScene(new Scene(korzen, 720, 480));
         scena.show();

@@ -15,8 +15,6 @@ public class Pionek {
     public char pobierzKolor() {
         return kolor;
     }
-
-
     public int pobierzWspolrzednaX() {
         return wspolrzednaX;
     }
@@ -30,8 +28,7 @@ public class Pionek {
     public boolean czyDamka() {
         return damka;
     }
-
-    public void setDamka(boolean czyDamka) {
-        this.damka = czyDamka;
+    public void ustawDamka() {
+        this.damka = true;
     }
 }

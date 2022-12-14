@@ -8,16 +8,15 @@ import klient.kontroler.Kontroler;
 import klient.model.Plansza;
 
 public class PlanszaGUI extends GridPane {
-    private Plansza plansza;
+    // private Plansza plansza;
     private final Kontroler kontroler;
     private int statusRuchu = 0;
     private int xPocz, yPocz;
     public PlanszaGUI(Kontroler kontroler) {
         this.kontroler = kontroler;
-        //odswiez();
     }
 
-    public void odswiez() {
+    public void odswiez(Plansza plansza) {
         getChildren().clear();
         for (int kolumna = 0; kolumna < plansza.pobierzWymiar(); kolumna++) {
             for (int wiersz = 0; wiersz < plansza.pobierzWymiar(); wiersz++) {
@@ -26,12 +25,10 @@ public class PlanszaGUI extends GridPane {
                 final int wspolrzednaY = wiersz;
                 poleGUI.setOnMousePressed(zdarzenie -> {
                     if (statusRuchu == 1) {
-                        //plansza.ruszPionek(Kontroler.pobierzKolor(), xPocz, yPocz, wspolrzednaX, wspolrzednaY);
                         statusRuchu = 0;
                         kontroler.wyslijKomende("RUCH " + xPocz + " " + yPocz + " " + wspolrzednaX + " "  + wspolrzednaY);
-                        odswiez();
+                        odswiez(plansza);
                     }
-
                 });
                 add(poleGUI, kolumna, wiersz);
                 PionekGUI pionekGUI = new PoleGUI(plansza.pobierzPole(kolumna, wiersz)).pobierzPionekGUI();
@@ -41,7 +38,6 @@ public class PlanszaGUI extends GridPane {
                         yPocz = wspolrzednaY;
                         statusRuchu = 1;
                     }
-
                 });
                 add(pionekGUI, kolumna, wiersz);
             }
@@ -51,14 +47,8 @@ public class PlanszaGUI extends GridPane {
         }
         setAlignment(Pos.CENTER);
     }
-
-    // !!!
-    public Plansza pobierzPlansze() {
-        return plansza;
-    }
-    public void ustawPlansze(Plansza plansza) {
-        this.plansza = plansza;
-    }
-    // !!!
+//    public void ustawPlansze(Plansza plansza) {
+//        this.plansza = plansza;
+//    }
 
 }

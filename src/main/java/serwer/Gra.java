@@ -12,17 +12,10 @@ import java.util.Scanner;
 public class Gra {
     private Gracz obecnyGracz;
     private Plansza plansza;
-    //    public Gracz pobierzObecnyGracz() {
-//        return obecnyGracz;
-//    }
-//
-//    public void ustawObecnyGracz(Gracz obecnyGracz) {
-//        this.obecnyGracz = obecnyGracz;
-//    }
     class Gracz implements Runnable {
-        private char kolor;
+        private final char kolor;
         private volatile Gracz przeciwnik;
-        private Socket gniazdo;
+        private final Socket gniazdo;
         private Scanner odGracza;
         private PrintWriter doGracza;
 
@@ -62,14 +55,9 @@ public class Gra {
                     int yKonc = Integer.parseInt(wspolrzedne[4]);
 
                     if (obecnyGracz.kolor == kolor && plansza.ruszPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
-//                        if (!plansza.moznaDalejBic(kolor, xPocz, yPocz) && plansza.normalnyRuch(kolor, xPocz, yPocz, xKonc, yKonc)) {
-//                            przeciwnik.doGracza.println("NORMALNY_RUCH_PRZECIWNIKA " + komenda.substring(5));
-//                            doGracza.println("POPRAWNY_NORMALNY_RUCH " + komenda.substring(5));
-//                            obecnyGracz = obecnyGracz.przeciwnik;
-//                        }
                         boolean bicieDostepne = false;
                         for (Pionek pionek : plansza.pobierzPionki()) {
-                            if (plansza.moznaDalejBic(pionek.pobierzKolor(), pionek.pobierzWspolrzednaX(), pionek.pobierzWspolrzednaY()) && pionek.pobierzKolor() == obecnyGracz.kolor) {
+                            if (!bicieDostepne && plansza.moznaDalejBic(pionek.pobierzKolor(), pionek.pobierzWspolrzednaX(), pionek.pobierzWspolrzednaY()) && pionek.pobierzKolor() == obecnyGracz.kolor) {
                                 doGracza.println("INFO Masz bicie");
                                 bicieDostepne = true;
                             }
@@ -77,12 +65,23 @@ public class Gra {
                         if (!bicieDostepne && plansza.normalnyRuch(kolor, xPocz, yPocz, xKonc, yKonc)) {
                             przeciwnik.doGracza.println("NORMALNY_RUCH_PRZECIWNIKA " + komenda.substring(5));
                             doGracza.println("POPRAWNY_NORMALNY_RUCH " + komenda.substring(5));
+
+                            if ((kolor == 'B' && yKonc == 0) || (kolor == 'C' && yKonc == plansza.pobierzWymiar() - 1)) {
+                                plansza.pobierzPionek(xKonc, yKonc).ustawDamka();
+                                doGracza.println("PROMOCJA " + xKonc + " " + yKonc);
+                                przeciwnik.doGracza.println("PROMOCJA " + xKonc + " " + yKonc);
+                            }
                             obecnyGracz = obecnyGracz.przeciwnik;
                         }
-                        if (plansza.zbijPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
+                        else if (plansza.zbijPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
                             przeciwnik.doGracza.println("BICIE_RUCH_PRZECIWNIKA " + komenda.substring(5));
                             doGracza.println("POPRAWNY_BICIE_RUCH " + komenda.substring(5));
                             if (!plansza.moznaDalejBic(kolor, xKonc, yKonc)) {
+                                if ((kolor == 'B' && yKonc == 0) || (kolor == 'C' && yKonc == plansza.pobierzWymiar() - 1)) {
+                                    plansza.pobierzPionek(xKonc, yKonc).ustawDamka();
+                                    doGracza.println("PROMOCJA " + xKonc + " " + yKonc);
+                                    przeciwnik.doGracza.println("PROMOCJA " + xKonc + " " + yKonc);
+                                }
                                 obecnyGracz = obecnyGracz.przeciwnik;
                             }
                             else {
@@ -125,7 +124,7 @@ public class Gra {
                 przetwarzajKomendy();
             } catch (Exception e) {
                 e.printStackTrace();
-                System.out.println("cos jest nie tak z serwerem");
+                System.out.println("Coś jest nie tak z serwerem");
             } finally {
                 if (przeciwnik != null && przeciwnik.doGracza != null) {
                     przeciwnik.doGracza.println("PRZECIWNIK_WYSZEDŁ");
