@@ -35,7 +35,7 @@ public class Plansza {
 
         // !!! testowe początkowe ułożenie planszy (damka)
 //
-//        pobierzPole(3,5).ustawPionek(new Pionek('B'));
+//        pobierzPole(1,6).ustawPionek(new Pionek('B'));
 //        pobierzPole(1, 6).pobierzPionek().ustawDamka();
 //        pobierzPole(3, 4).ustawPionek(new Pionek('C'));
 //        pobierzPole(6, 3).ustawPionek(new Pionek('C'));
@@ -49,6 +49,14 @@ public class Plansza {
 //        pobierzPole(5, 5).ustawPionek(new Pionek('C'));
 //        pobierzPole(6, 6).ustawPionek(new Pionek('B'));
 //        pobierzPole(6, 2).ustawPionek(new Pionek('C'));
+
+        // !!! testowe początkowe ułożeniee planszy (remis) (
+//        pobierzPole(0, 1).ustawPionek(new Pionek('B'));
+//        pobierzPole(0, 1).pobierzPionek().ustawDamka();
+//        pobierzPole(3, 6).ustawPionek(new Pionek('B'));
+//        pobierzPole(4, 3).ustawPionek(new Pionek('C'));
+//        pobierzPole(4, 3).pobierzPionek().ustawDamka();
+//        pobierzPole(2, 7 ).ustawPionek(new Pionek('C'));
     }
 
     public Pole pobierzPole(int x, int y) {

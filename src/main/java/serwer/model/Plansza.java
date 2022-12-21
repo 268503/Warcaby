@@ -7,6 +7,8 @@ public class Plansza {
     // private final Pole[][] pola;
     private final List<Pionek> pionki;
     private final int wymiar;
+    private int licznikRuchow = 0;
+    private final static int LIMIT_RUCHOW = 30;
 
     public Plansza(int wymiar, char kolorLewyDolny) {
         this.wymiar = wymiar;
@@ -54,6 +56,13 @@ public class Plansza {
 //        wstawPionek(new Pionek('C', 5, 5));
 //        wstawPionek(new Pionek('B', 6, 6));
 //        wstawPionek(new Pionek('C', 6, 2));
+        // !!! testowe początkowe ułożeniee planszy (remis) (
+//        wstawPionek(new Pionek('B', 0, 1));
+//        pobierzPionek(0, 1).ustawDamka();
+//        wstawPionek(new Pionek('B', 3, 6));
+//        wstawPionek(new Pionek('C', 4, 3));
+//        pobierzPionek(4, 3).ustawDamka();
+//        wstawPionek(new Pionek('C', 2, 7));
     }
 
 //    public Pole pobierzPole(int x, int y) {
@@ -116,6 +125,7 @@ public class Plansza {
                 pobierzPionek(xPocz, yPocz).przesun(xKonc, yKonc);
                 usunPionek(pobierzPionek(xPocz, yPocz));
                 usunPionek(pobierzPionek((xPocz + xKonc) / 2, (yPocz + yKonc) / 2));
+                licznikRuchow = 0;
                 return true;
             }
         }
@@ -145,16 +155,52 @@ public class Plansza {
             usunPionek(pobierzPionek(xBity, yBity));
             pobierzPionek(xPocz, yPocz).przesun(xKonc, yKonc);
             usunPionek(pobierzPionek(xPocz, yPocz));
+            licznikRuchow = 0;
             return true;
         }
         return false;
     }
     public boolean normalnyRuch(char kolorPionka, int xPocz, int yPocz, int xKonc, int yKonc) {
+//        if (!pobierzPionek(xPocz, yPocz).czyDamka()) {
+//            if ((kolorPionka == 'B' && yKonc == yPocz - 1 && (xKonc == xPocz - 1 || xKonc == xPocz + 1))
+//                    || (kolorPionka == 'C' && yKonc == yPocz + 1 && (xKonc == xPocz - 1 || xKonc == xPocz + 1))) {
+//                pobierzPionek(xPocz, yPocz).przesun(xKonc, yKonc);
+//                usunPionek(pobierzPionek(xPocz, yPocz));
+//                return true;
+//            }
+//        }
+//        else {
+//            if (Math.abs(xKonc - xPocz) != Math.abs(yKonc - yPocz)) {
+//                return false;
+//            }
+//            for (int i = 1; i <= Math.abs(xKonc - xPocz); i++) {
+//                if (pobierzPionek(xPocz + (int) Math.signum(xKonc - xPocz) * i, yPocz + (int) Math.signum(yKonc - yPocz) * i) != null) {
+//                    return false;
+//                }
+//            }
+//            pobierzPionek(xPocz, yPocz).przesun(xKonc, yKonc);
+//            usunPionek(pobierzPionek(xPocz, yPocz));
+//            return true;
+//        }
+//        return false;
+        if (moznaNormalnyRuch(kolorPionka, xPocz, yPocz, xKonc, yKonc))
+        {
+            if (pobierzPionek(xPocz, yPocz).czyDamka()) {
+                licznikRuchow++;
+            }
+            else {
+                licznikRuchow = 0;
+            }
+            pobierzPionek(xPocz, yPocz).przesun(xKonc, yKonc);
+            usunPionek(pobierzPionek(xPocz, yPocz));
+            return true;
+        }
+        return false;
+    }
+    public boolean moznaNormalnyRuch(char kolorPionka, int xPocz, int yPocz, int xKonc, int yKonc) {
         if (!pobierzPionek(xPocz, yPocz).czyDamka()) {
             if ((kolorPionka == 'B' && yKonc == yPocz - 1 && (xKonc == xPocz - 1 || xKonc == xPocz + 1))
                     || (kolorPionka == 'C' && yKonc == yPocz + 1 && (xKonc == xPocz - 1 || xKonc == xPocz + 1))) {
-                pobierzPionek(xPocz, yPocz).przesun(xKonc, yKonc);
-                usunPionek(pobierzPionek(xPocz, yPocz));
                 return true;
             }
         }
@@ -167,8 +213,6 @@ public class Plansza {
                     return false;
                 }
             }
-            pobierzPionek(xPocz, yPocz).przesun(xKonc, yKonc);
-            usunPionek(pobierzPionek(xPocz, yPocz));
             return true;
         }
         return false;
@@ -215,5 +259,35 @@ public class Plansza {
             }
             return false;
         }
+    }
+    public boolean czyRemis() {
+        System.out.println(licznikRuchow + " ruchow damka bez progresu");
+        if (licznikRuchow == LIMIT_RUCHOW)
+        {
+            return true;
+        }
+        return false;
+    }
+    public boolean czyWygrana(char kolor) {
+        for (Pionek pionek : pionki) {
+            if (pionek.pobierzKolor() != kolor) {
+                if (czyMoznaRuszyc(pionek)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    public boolean czyMoznaRuszyc(Pionek pionek) {
+        char kolor = pionek.pobierzKolor();
+        int x = pionek.pobierzWspolrzednaX();
+        int y = pionek.pobierzWspolrzednaY();
+        if (   (ruszPionek(kolor, x, y, x + 1, y - 1) && moznaNormalnyRuch(kolor, x, y, x + 1, y - 1))
+            || (ruszPionek(kolor, x, y, x - 1, y - 1) && moznaNormalnyRuch(kolor, x, y, x - 1, y - 1))
+            || (ruszPionek(kolor, x, y, x + 1, y + 1) && moznaNormalnyRuch(kolor, x, y, x + 1, y + 1))
+            || (ruszPionek(kolor, x, y, x - 1, y + 1) && moznaNormalnyRuch(kolor, x, y, x - 1, y + 1))) {
+            return true;
+        }
+        return moznaDalejBic(pionek.pobierzKolor(), pionek.pobierzWspolrzednaX(), pionek.pobierzWspolrzednaY());
     }
 }

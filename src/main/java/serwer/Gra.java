@@ -2,7 +2,6 @@ package serwer;
 
 import serwer.model.Pionek;
 import serwer.model.Plansza;
-import serwer.model.Pole;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -31,8 +30,7 @@ public class Gra {
             if (kolor == 'B') {
                 obecnyGracz = this;
                 doGracza.println("PODAJ_WARIANT");
-            }
-            else {
+            } else {
                 przeciwnik = obecnyGracz;
                 przeciwnik.przeciwnik = this;
                 doGracza.println("START");
@@ -41,13 +39,12 @@ public class Gra {
         }
 
         private void przetwarzajKomendy() {
-            while (odGracza.hasNextLine()) {
+            while (odGracza.hasNextLine() && obecnyGracz != null) {
                 String komenda = odGracza.nextLine();
                 System.out.println(kolor + " " + komenda);
                 if (komenda.startsWith("WYJDŹ")) {
                     return;
-                }
-                else if (komenda.startsWith("RUCH")) {
+                } else if (komenda.startsWith("RUCH")) {
                     String[] wspolrzedne = komenda.split(" ");
                     int xPocz = Integer.parseInt(wspolrzedne[1]);
                     int yPocz = Integer.parseInt(wspolrzedne[2]);
@@ -71,9 +68,22 @@ public class Gra {
                                 doGracza.println("PROMOCJA " + xKonc + " " + yKonc);
                                 przeciwnik.doGracza.println("PROMOCJA " + xKonc + " " + yKonc);
                             }
-                            obecnyGracz = obecnyGracz.przeciwnik;
-                        }
-                        else if (plansza.zbijPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
+                            //TODO potencjalnie wrzucić do metody
+                            if (plansza.czyWygrana(kolor)) {
+                                doGracza.println("WYGRANA " + kolor);
+                                przeciwnik.doGracza.println("WYGRANA " + kolor);
+                                obecnyGracz = null;
+                            }
+                            else if (plansza.czyRemis()){
+                                doGracza.println("REMIS");
+                                przeciwnik.doGracza.println("REMIS");
+                                obecnyGracz = null;
+                            }
+                            else {
+                                obecnyGracz = obecnyGracz.przeciwnik;
+                            }
+//                            obecnyGracz = obecnyGracz.przeciwnik;
+                        } else if (plansza.zbijPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
                             przeciwnik.doGracza.println("BICIE_RUCH_PRZECIWNIKA " + komenda.substring(5));
                             doGracza.println("POPRAWNY_BICIE_RUCH " + komenda.substring(5));
                             if (!plansza.moznaDalejBic(kolor, xKonc, yKonc)) {
@@ -82,7 +92,20 @@ public class Gra {
                                     doGracza.println("PROMOCJA " + xKonc + " " + yKonc);
                                     przeciwnik.doGracza.println("PROMOCJA " + xKonc + " " + yKonc);
                                 }
-                                obecnyGracz = obecnyGracz.przeciwnik;
+                                if (plansza.czyWygrana(kolor)) {
+                                    doGracza.println("ESSA WIN BY " + kolor);
+                                    przeciwnik.doGracza.println("ESSA WIN BY " + kolor);
+                                    obecnyGracz = null;
+                                }
+                                else if (plansza.czyRemis()){
+                                    doGracza.println("remis :((( " + kolor);
+                                    przeciwnik.doGracza.println("remis (((((" + kolor);
+                                    obecnyGracz = null;
+                                }
+                                else {
+                                    obecnyGracz = obecnyGracz.przeciwnik;
+                                }
+//                                obecnyGracz = obecnyGracz.przeciwnik;
                             }
                             else {
                                 doGracza.println("INFO Kontynuuj bicie");

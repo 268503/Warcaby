@@ -5,6 +5,7 @@ import javafx.scene.shape.Rectangle;
 import klient.model.Pole;
 
 public class PoleGUI extends Rectangle {
+    private final static int DLUGOSC_BOKU = 60;
     private PionekGUI pionekGUI;
     public PoleGUI(Pole pole) {
         pionekGUI = new PionekGUI(pole.pobierzPionek());
@@ -14,10 +15,8 @@ public class PoleGUI extends Rectangle {
         else {
             setFill(Color.rgb(182, 134, 101));
         }
-
-        //TODO: skalowanie jednak nia, ale nie magic number
-        setHeight(60);
-        setWidth(60);
+        setHeight(DLUGOSC_BOKU);
+        setWidth(DLUGOSC_BOKU);
     }
 
     public PionekGUI pobierzPionekGUI() {
