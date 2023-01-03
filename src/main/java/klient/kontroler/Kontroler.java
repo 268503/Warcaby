@@ -27,6 +27,7 @@ public class Kontroler implements Runnable {
         try {
             String odpowiedz = odSerwera.nextLine();
             kolor = odpowiedz.charAt(7);
+            planszaGUI.ustawKolor(kolor);
             System.out.println(kolor);
             char kolorPrzeciwnika = (kolor == 'B' ? 'C' : 'B');
             while (odSerwera.hasNextLine()) {

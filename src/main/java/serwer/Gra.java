@@ -1,7 +1,6 @@
 package serwer;
 
-import serwer.model.Pionek;
-import serwer.model.Plansza;
+import serwer.model.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,6 +10,7 @@ import java.util.Scanner;
 public class Gra {
     private Gracz obecnyGracz;
     private Plansza plansza;
+    private ZarzadcaBudowniczych zarzadcaBudowniczych = new ZarzadcaBudowniczych();
     class Gracz implements Runnable {
         private final char kolor;
         private volatile Gracz przeciwnik;
@@ -52,14 +52,17 @@ public class Gra {
                     int yKonc = Integer.parseInt(wspolrzedne[4]);
 
                     if (obecnyGracz.kolor == kolor && plansza.ruszPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
-                        boolean bicieDostepne = false;
-                        for (Pionek pionek : plansza.pobierzPionki()) {
-                            if (!bicieDostepne && plansza.moznaDalejBic(pionek.pobierzKolor(), pionek.pobierzWspolrzednaX(), pionek.pobierzWspolrzednaY()) && pionek.pobierzKolor() == obecnyGracz.kolor) {
-                                doGracza.println("INFO Masz bicie");
-                                bicieDostepne = true;
-                            }
+//                        boolean bicieDostepne = false;
+//                        for (Pionek pionek : plansza.pobierzPionki()) {
+//                            if (!bicieDostepne && zarzadcaBudowniczych.moznaDalejBic(pionek.pobierzKolor(), pionek.pobierzWspolrzednaX(), pionek.pobierzWspolrzednaY()) && pionek.pobierzKolor() == obecnyGracz.kolor) {
+//                                doGracza.println("INFO Masz bicie");
+//                                bicieDostepne = true;
+//                            }
+//                        }
+                        if (zarzadcaBudowniczych.istniejeBicie(obecnyGracz.kolor)) {
+                            doGracza.println("INFO Masz bicie");
                         }
-                        if (!bicieDostepne && plansza.normalnyRuch(kolor, xPocz, yPocz, xKonc, yKonc)) {
+                        if (zarzadcaBudowniczych.normalnyRuch(kolor, xPocz, yPocz, xKonc, yKonc)) {
                             przeciwnik.doGracza.println("NORMALNY_RUCH_PRZECIWNIKA " + komenda.substring(5));
                             doGracza.println("POPRAWNY_NORMALNY_RUCH " + komenda.substring(5));
 
@@ -69,12 +72,12 @@ public class Gra {
                                 przeciwnik.doGracza.println("PROMOCJA " + xKonc + " " + yKonc);
                             }
                             //TODO potencjalnie wrzucić do metody
-                            if (plansza.czyWygrana(kolor)) {
+                            if (zarzadcaBudowniczych.czyWygrana(kolor)) {
                                 doGracza.println("WYGRANA " + kolor);
                                 przeciwnik.doGracza.println("WYGRANA " + kolor);
                                 obecnyGracz = null;
                             }
-                            else if (plansza.czyRemis()){
+                            else if (zarzadcaBudowniczych.czyRemis()){
                                 doGracza.println("REMIS");
                                 przeciwnik.doGracza.println("REMIS");
                                 obecnyGracz = null;
@@ -83,23 +86,23 @@ public class Gra {
                                 obecnyGracz = obecnyGracz.przeciwnik;
                             }
 //                            obecnyGracz = obecnyGracz.przeciwnik;
-                        } else if (plansza.zbijPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
+                        } else if (zarzadcaBudowniczych.zbijPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
                             przeciwnik.doGracza.println("BICIE_RUCH_PRZECIWNIKA " + komenda.substring(5));
                             doGracza.println("POPRAWNY_BICIE_RUCH " + komenda.substring(5));
-                            if (!plansza.moznaDalejBic(kolor, xKonc, yKonc)) {
+                            if (!zarzadcaBudowniczych.moznaDalejBic(kolor, xKonc, yKonc)) {
                                 if ((kolor == 'B' && yKonc == 0) || (kolor == 'C' && yKonc == plansza.pobierzWymiar() - 1)) {
                                     plansza.pobierzPionek(xKonc, yKonc).ustawDamka();
                                     doGracza.println("PROMOCJA " + xKonc + " " + yKonc);
                                     przeciwnik.doGracza.println("PROMOCJA " + xKonc + " " + yKonc);
                                 }
-                                if (plansza.czyWygrana(kolor)) {
-                                    doGracza.println("ESSA WIN BY " + kolor);
-                                    przeciwnik.doGracza.println("ESSA WIN BY " + kolor);
+                                if (zarzadcaBudowniczych.czyWygrana(kolor)) {
+                                    doGracza.println("WYGRANA " + kolor);
+                                    przeciwnik.doGracza.println("WYGRANA " + kolor);
                                     obecnyGracz = null;
                                 }
-                                else if (plansza.czyRemis()){
-                                    doGracza.println("remis :((( " + kolor);
-                                    przeciwnik.doGracza.println("remis (((((" + kolor);
+                                else if (zarzadcaBudowniczych.czyRemis()){
+                                    doGracza.println("REMIS");
+                                    przeciwnik.doGracza.println("REMIS");
                                     obecnyGracz = null;
                                 }
                                 else {
@@ -118,8 +121,10 @@ public class Gra {
                 }
                 else if (komenda.startsWith("WARIANT")) { //TODO: nie wysylac info o wariancie jesli gra juz trwa
                     char wariant = komenda.charAt(8);
+                    PlanszaBudowniczy planszaBudowniczy = null;
                     if (wariant == '1') {
-                        plansza = new Plansza(8, 'c');
+                        //plansza = new Plansza(8, 'c');
+                        planszaBudowniczy = new PlanszaWariantKlasycznyBudowniczy();
                         doGracza.println("STWÓRZ_PLANSZĘ " + wariant);
                         while (przeciwnik == null) {
                             Thread.onSpinWait();
@@ -135,6 +140,11 @@ public class Gra {
                     }
                     else {
                         doGracza.println("PODAJ_WARIANT");
+                    }
+                    if (planszaBudowniczy != null) {
+                        zarzadcaBudowniczych.ustawPlanszaBudowniczy(planszaBudowniczy);
+                        zarzadcaBudowniczych.skonstruujPlansze();
+                        plansza = zarzadcaBudowniczych.pobierzPlansza();
                     }
                 }
             }
