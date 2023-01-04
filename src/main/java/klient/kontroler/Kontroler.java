@@ -42,28 +42,33 @@ public class Kontroler implements Runnable {
                         final TextInputDialog wprowadzanieWariantDialog = new TextInputDialog();
                         wprowadzanieWariantDialog.setTitle("Wariant");
                         wprowadzanieWariantDialog.setGraphic(null);
-                        wprowadzanieWariantDialog.setHeaderText("Podaj wariant waracabów (1 - TODO, 2 - TODO, 3 - TODO)");
+                        wprowadzanieWariantDialog.setHeaderText("Podaj wariant waracabów (1 - warcaby klasyczne, 2 - warcaby hiszpanskie, 3 - warcaby polskie)");
                         wprowadzanieWariantDialog.showAndWait();
                         String wybor = wprowadzanieWariantDialog.getEditor().getText();
                         doSerwera.println("WARIANT " + wybor);});
                 }
                 else if (odpowiedz.startsWith("STWÓRZ_PLANSZĘ")) {
-
-                    //TODO: zrobić żeby null nie niszczył wszechświata
-
                     char wariant = odpowiedz.charAt(15);
                     if (wariant == '1') {
-                        plansza = new Plansza(8, 'c');
+                        plansza = new Plansza(8, 'c', 1);
                         // planszaGUI.ustawPlansze(plansza);
                         Platform.runLater(() -> {
                             planszaGUI.odswiez(plansza);
                         });
                     }
                     else if (wariant == '2') {
-
+                        plansza = new Plansza(8, 'j', 2);
+                        // planszaGUI.ustawPlansze(plansza);
+                        Platform.runLater(() -> {
+                            planszaGUI.odswiez(plansza);
+                        });
                     }
                     else if (wariant == '3') {
-
+                        plansza = new Plansza(10, 'c', 3);
+                        // planszaGUI.ustawPlansze(plansza);
+                        Platform.runLater(() -> {
+                            planszaGUI.odswiez(plansza);
+                        });
                     }
                 }
                 else if (odpowiedz.startsWith("POPRAWNY_NORMALNY_RUCH")) {

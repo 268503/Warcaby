@@ -120,7 +120,10 @@ public class Gra {
                     }
                 }
                 else if (komenda.startsWith("WARIANT")) { //TODO: nie wysylac info o wariancie jesli gra juz trwa
-                    char wariant = komenda.charAt(8);
+                    char wariant = '-';
+                    if (komenda.length() >= 9) {
+                        wariant = komenda.charAt(8);
+                    }
                     PlanszaBudowniczy planszaBudowniczy = null;
                     if (wariant == '1') {
                         //plansza = new Plansza(8, 'c');
@@ -133,10 +136,20 @@ public class Gra {
                         //TODO: gra.wystartuj()
                     }
                     else if (wariant == '2') {
-
+                        planszaBudowniczy = new PlanszaWariantHiszpanskiBudowniczy();
+                        doGracza.println("STWÓRZ_PLANSZĘ " + wariant);
+                        while (przeciwnik == null) {
+                            Thread.onSpinWait();
+                        }
+                        przeciwnik.doGracza.println("STWÓRZ_PLANSZĘ " + wariant);
                     }
                     else if (wariant == '3') {
-
+                        planszaBudowniczy = new PlanszaWariantPolskiBudowniczy();
+                        doGracza.println("STWÓRZ_PLANSZĘ " + wariant);
+                        while (przeciwnik == null) {
+                            Thread.onSpinWait();
+                        }
+                        przeciwnik.doGracza.println("STWÓRZ_PLANSZĘ " + wariant);
                     }
                     else {
                         doGracza.println("PODAJ_WARIANT");

@@ -36,4 +36,7 @@ public class ZarzadcaBudowniczych {
     public boolean istniejeBicie(char kolor) {
         return planszaBudowniczy.istniejeBicie(kolor);
     }
+    public void zresetujObecneWspolrzedne() {
+        planszaBudowniczy.zresetujObecneWspolrzedne();
+    }
 }

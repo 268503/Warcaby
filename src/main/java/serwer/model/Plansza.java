@@ -14,13 +14,8 @@ public class Plansza {
         licznikRuchow = liczba;
     }
     public final static int LIMIT_RUCHOW = 30;
-//
-//    public Plansza() {
-//        // this.wymiar = wymiar;
-//        pionki = new ArrayList<>();
-//    }
-    public void ustawPionki() {
-        pionki = new ArrayList<>();
+    public void ustawPionki(List<Pionek> pionki) {
+        this.pionki = pionki;
     }
 
     public void ustawWymiar(int liczba) {

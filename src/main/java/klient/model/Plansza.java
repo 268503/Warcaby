@@ -4,7 +4,7 @@ public class Plansza {
     private final Pole[][] pola;
     private final int wymiar;
 
-    public Plansza(int wymiar, char kolorLewyDolny) {
+    public Plansza(int wymiar, char kolorLewyDolny, int wariant) {
         this.wymiar = wymiar;
         pola = new Pole[wymiar][wymiar];
         char kolorDrugi;
@@ -21,13 +21,15 @@ public class Plansza {
                 }
                 else {
                     ustawPole(x, y, kolorLewyDolny);
-                    if (y < 3) {
+                }
+                if (pobierzPole(x, y).pobierzKolorPola() == 'c') {
+                    if (y < (wariant == 3 ? 4 : 3)) {
                         // !!! dobre początkowe ułożenie planszy
-                         pobierzPole(x, y).ustawPionek(new Pionek('C'));
+                        pobierzPole(x, y).ustawPionek(new Pionek('C'));
                     }
-                    else if (y > 4) {
+                    else if (y > (wariant == 3 ? 5 : 4)) {
                         // !!! dobre początkowe ułożenie planszy
-                         pobierzPole(x, y).ustawPionek(new Pionek('B'));
+                        pobierzPole(x, y).ustawPionek(new Pionek('B'));
                     }
                 }
             }
@@ -57,6 +59,18 @@ public class Plansza {
 //        pobierzPole(4, 3).ustawPionek(new Pionek('C'));
 //        pobierzPole(4, 3).pobierzPionek().ustawDamka();
 //        pobierzPole(2, 7 ).ustawPionek(new Pionek('C'));
+        // late game test chyba
+
+//        pobierzPole(2, 3).ustawPionek(new Pionek('B'));
+//        pobierzPole(1, 0).ustawPionek(new Pionek('C'));
+//        pobierzPole(1, 2).ustawPionek(new Pionek('B'));
+//        pobierzPole(0, 1).ustawPionek(new Pionek('B'));
+//        pobierzPole(3, 6).ustawPionek(new Pionek('C'));
+//        pobierzPole(5, 2).ustawPionek(new Pionek('C'));
+//        pobierzPole(7, 4).ustawPionek(new Pionek('B'));
+//        pobierzPole(7, 0).ustawPionek(new Pionek('C'));
+//        pobierzPole(7, 6).ustawPionek(new Pionek('C'));
+//        pobierzPole(7, 6).pobierzPionek().ustawDamka();
     }
 
     public Pole pobierzPole(int x, int y) {

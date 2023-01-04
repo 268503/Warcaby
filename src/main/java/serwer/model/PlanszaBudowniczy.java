@@ -1,6 +1,8 @@
 package serwer.model;
 
 public abstract class PlanszaBudowniczy {
+    protected int xAktualny = -1;
+    protected int yAktualny = -1;
     protected Plansza plansza;
     public Plansza pobierzPlansza() {
         return plansza;
@@ -41,5 +43,9 @@ public abstract class PlanszaBudowniczy {
             return true;
         }
         return moznaDalejBic(pionek.pobierzKolor(), pionek.pobierzWspolrzednaX(), pionek.pobierzWspolrzednaY());
+    }
+    public void zresetujObecneWspolrzedne() {
+        xAktualny = -1;
+        yAktualny = -1;
     }
 }
