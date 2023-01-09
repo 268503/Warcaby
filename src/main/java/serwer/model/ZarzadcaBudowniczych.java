@@ -26,10 +26,10 @@ public class ZarzadcaBudowniczych {
     public boolean czyWygrana(char kolor) {
         return planszaBudowniczy.czyWygrana(kolor);
     }
-    public boolean czyMoznaRuszyc(Pionek pionek)
-    {
-        return czyMoznaRuszyc(pionek);
-    }
+//    public boolean czyMoznaRuszyc(Pionek pionek)
+//    {
+//        return planszaBudowniczy.czyMoznaRuszyc(pionek);
+//    }
     public Plansza pobierzPlansza() {
         return planszaBudowniczy.pobierzPlansza();
     }

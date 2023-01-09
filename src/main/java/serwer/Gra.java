@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class Gra {
     private Gracz obecnyGracz;
     private Plansza plansza;
-    private ZarzadcaBudowniczych zarzadcaBudowniczych = new ZarzadcaBudowniczych();
+    private final ZarzadcaBudowniczych zarzadcaBudowniczych = new ZarzadcaBudowniczych();
     class Gracz implements Runnable {
         private final char kolor;
         private volatile Gracz przeciwnik;
@@ -52,13 +52,6 @@ public class Gra {
                     int yKonc = Integer.parseInt(wspolrzedne[4]);
 
                     if (obecnyGracz.kolor == kolor && plansza.ruszPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
-//                        boolean bicieDostepne = false;
-//                        for (Pionek pionek : plansza.pobierzPionki()) {
-//                            if (!bicieDostepne && zarzadcaBudowniczych.moznaDalejBic(pionek.pobierzKolor(), pionek.pobierzWspolrzednaX(), pionek.pobierzWspolrzednaY()) && pionek.pobierzKolor() == obecnyGracz.kolor) {
-//                                doGracza.println("INFO Masz bicie");
-//                                bicieDostepne = true;
-//                            }
-//                        }
                         if (zarzadcaBudowniczych.istniejeBicie(obecnyGracz.kolor)) {
                             doGracza.println("INFO Masz bicie");
                         }
@@ -85,7 +78,6 @@ public class Gra {
                             else {
                                 obecnyGracz = obecnyGracz.przeciwnik;
                             }
-//                            obecnyGracz = obecnyGracz.przeciwnik;
                         } else if (zarzadcaBudowniczych.zbijPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
                             przeciwnik.doGracza.println("BICIE_RUCH_PRZECIWNIKA " + komenda.substring(5));
                             doGracza.println("POPRAWNY_BICIE_RUCH " + komenda.substring(5));
@@ -108,7 +100,6 @@ public class Gra {
                                 else {
                                     obecnyGracz = obecnyGracz.przeciwnik;
                                 }
-//                                obecnyGracz = obecnyGracz.przeciwnik;
                             }
                             else {
                                 doGracza.println("INFO Kontynuuj bicie");
@@ -119,21 +110,19 @@ public class Gra {
                         doGracza.println("NIEPOPRAWNY_RUCH");
                     }
                 }
-                else if (komenda.startsWith("WARIANT")) { //TODO: nie wysylac info o wariancie jesli gra juz trwa
+                else if (komenda.startsWith("WARIANT")) {
                     char wariant = '-';
                     if (komenda.length() >= 9) {
                         wariant = komenda.charAt(8);
                     }
                     PlanszaBudowniczy planszaBudowniczy = null;
                     if (wariant == '1') {
-                        //plansza = new Plansza(8, 'c');
                         planszaBudowniczy = new PlanszaWariantKlasycznyBudowniczy();
                         doGracza.println("STWÓRZ_PLANSZĘ " + wariant);
                         while (przeciwnik == null) {
                             Thread.onSpinWait();
                         }
                         przeciwnik.doGracza.println("STWÓRZ_PLANSZĘ " + wariant);
-                        //TODO: gra.wystartuj()
                     }
                     else if (wariant == '2') {
                         planszaBudowniczy = new PlanszaWariantHiszpanskiBudowniczy();

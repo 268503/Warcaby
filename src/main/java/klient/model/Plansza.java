@@ -71,6 +71,44 @@ public class Plansza {
 //        pobierzPole(7, 0).ustawPionek(new Pionek('C'));
 //        pobierzPole(7, 6).ustawPionek(new Pionek('C'));
 //        pobierzPole(7, 6).pobierzPionek().ustawDamka();
+        // nie działało w hiszpańskim
+//        pobierzPole(0, 1).ustawPionek(new Pionek('C'));
+//        pobierzPole(6, 7).ustawPionek(new Pionek('C'));
+//        pobierzPole(4, 1).ustawPionek(new Pionek('B'));
+//        pobierzPole(4, 3).ustawPionek(new Pionek('B'));
+//        pobierzPole(4, 5).ustawPionek(new Pionek('B'));
+//        pobierzPole(0, 5).ustawPionek(new Pionek('B'));
+//        pobierzPole(0, 7).ustawPionek(new Pionek('B'));
+//        pobierzPole(2, 7).ustawPionek(new Pionek('B'));
+//        pobierzPole(7, 6).ustawPionek(new Pionek('B'));
+//        pobierzPole(6, 7).pobierzPionek().ustawDamka();
+//        pobierzPole(4, 1).pobierzPionek().ustawDamka();
+//        pobierzPole(4, 3).pobierzPionek().ustawDamka();
+        // nie działało w hiszpańskim ale w hiszpanskim
+//        pobierzPole(7, 1).ustawPionek(new Pionek('C'));
+//        pobierzPole(1, 7).ustawPionek(new Pionek('C'));
+//        pobierzPole(3, 1).ustawPionek(new Pionek('B'));
+//        pobierzPole(3, 3).ustawPionek(new Pionek('B'));
+//        pobierzPole(3, 5).ustawPionek(new Pionek('B'));
+//        pobierzPole(7, 5).ustawPionek(new Pionek('B'));
+//        pobierzPole(7, 7).ustawPionek(new Pionek('B'));
+//        pobierzPole(5, 7).ustawPionek(new Pionek('B'));
+//        pobierzPole(0, 6).ustawPionek(new Pionek('B'));
+//        pobierzPole(1, 7).pobierzPionek().ustawDamka();
+//        pobierzPole(3, 1).pobierzPionek().ustawDamka();
+//        pobierzPole(3, 3).pobierzPionek().ustawDamka();
+        // lichess
+//        pobierzPole(2, 1).ustawPionek(new Pionek('C'));
+//        pobierzPole(1, 2).ustawPionek(new Pionek('C'));
+//        pobierzPole(1, 4).ustawPionek(new Pionek('C'));
+//        pobierzPole(3, 6).ustawPionek(new Pionek('C'));
+//        pobierzPole(4, 7).ustawPionek(new Pionek('B'));
+//        pobierzPole(4, 7).pobierzPionek().ustawDamka();
+        // hiszpański lichess
+//        pobierzPole(1, 3).ustawPionek(new Pionek('C'));
+//        pobierzPole(3, 3).ustawPionek(new Pionek('C'));
+//        pobierzPole(5, 3).ustawPionek(new Pionek('C'));
+//        pobierzPole(4, 4).ustawPionek(new Pionek('B'));
     }
 
     public Pole pobierzPole(int x, int y) {

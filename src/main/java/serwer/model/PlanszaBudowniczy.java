@@ -14,12 +14,7 @@ public abstract class PlanszaBudowniczy {
     abstract public boolean moznaNormalnyRuch(char kolorPionka, int xPocz, int yPocz, int xKonc, int yKonc);
     abstract public boolean moznaDalejBic(char kolorPionka, int x, int y);
     public boolean czyRemis() {
-        System.out.println(plansza.pobierzLicznikRuchow() + " ruchow damka bez progresu");
-        if (plansza.pobierzLicznikRuchow() == plansza.LIMIT_RUCHOW)
-        {
-            return true;
-        }
-        return false;
+        return plansza.pobierzLicznikRuchow() == Plansza.LIMIT_RUCHOW;
     }
     public boolean czyWygrana(char kolor) {
         for (Pionek pionek : plansza.pobierzPionki()) {

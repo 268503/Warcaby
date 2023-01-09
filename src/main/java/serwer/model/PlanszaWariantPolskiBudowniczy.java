@@ -21,10 +21,7 @@ public class PlanszaWariantPolskiBudowniczy extends PlanszaBudowniczy {
         plansza.ustawWymiar(WYMIAR_PLANSZY);
         for (int x = 0; x < WYMIAR_PLANSZY; x++) {
             for (int y = 0; y < WYMIAR_PLANSZY; y++) {
-                if ((x + y) % 2 == 0) {
-                    // TODO: ogarnąć builder
-                }
-                else {
+                if ((x + y) % 2 == 1) {
                     //**********normalne warcaby
                     if (y < 4) {
 //                        pobierzPole(x, y).ustawPionek(new Pionek('C', x, y));
@@ -66,6 +63,13 @@ public class PlanszaWariantPolskiBudowniczy extends PlanszaBudowniczy {
 
     @Override
     public boolean zbijPionek(char kolorPionka, int xPocz, int yPocz, int xKonc, int yKonc) {
+        int wymaganaDlugoscBicia = znajdzNajlepszeBicie(plansza, kolorPionka);
+        if (!(glebokoscPoBiciu(kolorPionka, xPocz, yPocz, xKonc, yKonc) == wymaganaDlugoscBicia)) {
+            return false;
+        }
+        if (!((xAktualny == -1 && yAktualny == -1) || (xAktualny == xPocz && yAktualny == yPocz))) {
+            return false;
+        }
         if (!plansza.pobierzPionek(xPocz, yPocz).czyDamka()) {
             if (plansza.pobierzPionek((xPocz + xKonc) / 2, (yPocz + yKonc) / 2) == null) {
                 return false;
@@ -79,6 +83,13 @@ public class PlanszaWariantPolskiBudowniczy extends PlanszaBudowniczy {
                 plansza.usunPionek(plansza.pobierzPionek(xPocz, yPocz));
                 plansza.usunPionek(plansza.pobierzPionek((xPocz + xKonc) / 2, (yPocz + yKonc) / 2));
                 plansza.ustawLicznikRuchow(0);
+                if (moznaDalejBic(kolorPionka, xKonc, yKonc)) {
+                    xAktualny = xKonc;
+                    yAktualny = yKonc;
+                }
+                else {
+                    zresetujObecneWspolrzedne();
+                }
                 return true;
             }
         }
@@ -109,34 +120,19 @@ public class PlanszaWariantPolskiBudowniczy extends PlanszaBudowniczy {
             plansza.pobierzPionek(xPocz, yPocz).przesun(xKonc, yKonc);
             plansza.usunPionek(plansza.pobierzPionek(xPocz, yPocz));
             plansza.ustawLicznikRuchow(0);
+            if (moznaDalejBic(kolorPionka, xKonc, yKonc)) {
+                xAktualny = xKonc;
+                yAktualny = yKonc;
+            }
+            else {
+                zresetujObecneWspolrzedne();
+            }
             return true;
         }
         return false;
     }
     @Override
     public boolean normalnyRuch(char kolorPionka, int xPocz, int yPocz, int xKonc, int yKonc) {
-//        if (!pobierzPionek(xPocz, yPocz).czyDamka()) {
-//            if ((kolorPionka == 'B' && yKonc == yPocz - 1 && (xKonc == xPocz - 1 || xKonc == xPocz + 1))
-//                    || (kolorPionka == 'C' && yKonc == yPocz + 1 && (xKonc == xPocz - 1 || xKonc == xPocz + 1))) {
-//                pobierzPionek(xPocz, yPocz).przesun(xKonc, yKonc);
-//                usunPionek(pobierzPionek(xPocz, yPocz));
-//                return true;
-//            }
-//        }
-//        else {
-//            if (Math.abs(xKonc - xPocz) != Math.abs(yKonc - yPocz)) {
-//                return false;
-//            }
-//            for (int i = 1; i <= Math.abs(xKonc - xPocz); i++) {
-//                if (pobierzPionek(xPocz + (int) Math.signum(xKonc - xPocz) * i, yPocz + (int) Math.signum(yKonc - yPocz) * i) != null) {
-//                    return false;
-//                }
-//            }
-//            pobierzPionek(xPocz, yPocz).przesun(xKonc, yKonc);
-//            usunPionek(pobierzPionek(xPocz, yPocz));
-//            return true;
-//        }
-//        return false;
         if (istniejeBicie(kolorPionka)) {
             return false;
         }
@@ -157,10 +153,8 @@ public class PlanszaWariantPolskiBudowniczy extends PlanszaBudowniczy {
     @Override
     public boolean moznaNormalnyRuch(char kolorPionka, int xPocz, int yPocz, int xKonc, int yKonc) {
         if (!plansza.pobierzPionek(xPocz, yPocz).czyDamka()) {
-            if ((kolorPionka == 'B' && yKonc == yPocz - 1 && (xKonc == xPocz - 1 || xKonc == xPocz + 1))
-                    || (kolorPionka == 'C' && yKonc == yPocz + 1 && (xKonc == xPocz - 1 || xKonc == xPocz + 1))) {
-                return true;
-            }
+            return (kolorPionka == 'B' && yKonc == yPocz - 1 && (xKonc == xPocz - 1 || xKonc == xPocz + 1))
+                    || (kolorPionka == 'C' && yKonc == yPocz + 1 && (xKonc == xPocz - 1 || xKonc == xPocz + 1));
         }
         else {
             if (Math.abs(xKonc - xPocz) != Math.abs(yKonc - yPocz)) {
@@ -173,7 +167,6 @@ public class PlanszaWariantPolskiBudowniczy extends PlanszaBudowniczy {
             }
             return true;
         }
-        return false;
     }
     @Override
     public boolean moznaDalejBic(char kolorPionka, int x, int y) {
@@ -215,33 +208,192 @@ public class PlanszaWariantPolskiBudowniczy extends PlanszaBudowniczy {
             return false;
         }
     }
-    public boolean czyRemis() {
-        if (plansza.pobierzLicznikRuchow() == plansza.LIMIT_RUCHOW)
-        {
-            return true;
-        }
-        return false;
-    }
-    public boolean czyWygrana(char kolor) {
-        for (Pionek pionek : plansza.pobierzPionki()) {
-            if (pionek.pobierzKolor() != kolor) {
-                if (czyMoznaRuszyc(pionek)) {
-                    return false;
+public int znajdzNajlepszeBicie(Plansza plansza, char kolor) {
+    Plansza kopia = new Plansza();
+    kopia.ustawWymiar(WYMIAR_PLANSZY);
+    kopia.ustawPionki(plansza.pobierzPionki());
+    int maksymalnaDlugoscBicia = 0;
+    int dlugosc;
+    for (int i = 0; i < WYMIAR_PLANSZY; i++) {
+        for (int j = 0; j < WYMIAR_PLANSZY; j++) {
+            Pionek pionek = kopia.pobierzPionek(i, j);
+            if (pionek != null && pionek.pobierzKolor() == kolor) {
+                dlugosc = rekurencyjneSzukanieBicia(pionek, kopia, 0);
+                if (dlugosc > maksymalnaDlugoscBicia) {
+                    maksymalnaDlugoscBicia = dlugosc;
                 }
             }
         }
-        return true;
     }
-    public boolean czyMoznaRuszyc(Pionek pionek) {
-        char kolor = pionek.pobierzKolor();
-        int x = pionek.pobierzWspolrzednaX();
-        int y = pionek.pobierzWspolrzednaY();
-        if (   (plansza.ruszPionek(kolor, x, y, x + 1, y - 1) && moznaNormalnyRuch(kolor, x, y, x + 1, y - 1))
-                || (plansza.ruszPionek(kolor, x, y, x - 1, y - 1) && moznaNormalnyRuch(kolor, x, y, x - 1, y - 1))
-                || (plansza.ruszPionek(kolor, x, y, x + 1, y + 1) && moznaNormalnyRuch(kolor, x, y, x + 1, y + 1))
-                || (plansza.ruszPionek(kolor, x, y, x - 1, y + 1) && moznaNormalnyRuch(kolor, x, y, x - 1, y + 1))) {
-            return true;
+    return maksymalnaDlugoscBicia;
+}
+
+    public int rekurencyjneSzukanieBicia(Pionek pionek, Plansza plansza, int glebokosc) {
+        int maksymalnaGlebokosc = glebokosc;
+        int nowaGlebokosc;
+        if (!pionek.czyDamka()) {
+            Plansza kopia = new Plansza();
+            kopia.ustawWymiar(WYMIAR_PLANSZY);
+            kopia.ustawPionki(new ArrayList<>(plansza.pobierzPionki()));
+            int x = pionek.pobierzWspolrzednaX();
+            int y = pionek.pobierzWspolrzednaY();
+            char kolorPionka = pionek.pobierzKolor();
+            if (x > 1 && y > 1 && plansza.pobierzPionek(x - 1, y - 1) != null && plansza.pobierzPionek(x - 2, y - 2) == null && plansza.pobierzPionek(x - 1, y - 1).pobierzKolor() != kolorPionka) {
+                Pionek nowyPionek = new Pionek(kolorPionka, x - 2, y - 2);
+                kopia.wstawPionek(nowyPionek);
+                kopia.usunPionek(kopia.pobierzPionek(x, y));
+                kopia.usunPionek(kopia.pobierzPionek(x - 1, y - 1));
+                nowaGlebokosc = rekurencyjneSzukanieBicia(nowyPionek, kopia, glebokosc + 1);
+                if (nowaGlebokosc > maksymalnaGlebokosc) {
+                    maksymalnaGlebokosc = nowaGlebokosc;
+                }
+            }
+            kopia.ustawPionki(new ArrayList<>(plansza.pobierzPionki()));
+            if (x > 1 && y < plansza.pobierzWymiar() - 2 && plansza.pobierzPionek(x - 1, y + 1) != null && plansza.pobierzPionek(x - 2, y + 2) == null && plansza.pobierzPionek(x - 1, y + 1).pobierzKolor() != kolorPionka) {
+                Pionek nowyPionek = new Pionek(kolorPionka, x - 2, y + 2);
+                kopia.wstawPionek(nowyPionek);
+                kopia.usunPionek(kopia.pobierzPionek(x, y));
+                kopia.usunPionek(kopia.pobierzPionek(x - 1, y + 1));
+                nowaGlebokosc = rekurencyjneSzukanieBicia(nowyPionek, kopia, glebokosc + 1);
+                if (nowaGlebokosc > maksymalnaGlebokosc) {
+                    maksymalnaGlebokosc = nowaGlebokosc;
+                }
+            }
+            kopia.ustawPionki(new ArrayList<>(plansza.pobierzPionki()));
+            if (x < plansza.pobierzWymiar() - 2 && y > 1 && plansza.pobierzPionek(x + 1, y - 1) != null && plansza.pobierzPionek(x + 2, y - 2) == null && plansza.pobierzPionek(x + 1, y - 1).pobierzKolor() != kolorPionka) {
+                Pionek nowyPionek = new Pionek(kolorPionka, x + 2, y - 2);
+                kopia.wstawPionek(nowyPionek);
+                kopia.usunPionek(kopia.pobierzPionek(x, y));
+                kopia.usunPionek(kopia.pobierzPionek(x + 1, y - 1));
+                nowaGlebokosc = rekurencyjneSzukanieBicia(nowyPionek, kopia, glebokosc + 1);
+                if (nowaGlebokosc > maksymalnaGlebokosc) {
+                    maksymalnaGlebokosc = nowaGlebokosc;
+                }
+            }
+            kopia.ustawPionki(new ArrayList<>(plansza.pobierzPionki()));
+            if (x < plansza.pobierzWymiar() - 2 && y < plansza.pobierzWymiar() - 2 && plansza.pobierzPionek(x + 1, y + 1) != null && plansza.pobierzPionek(x + 2, y + 2) == null && plansza.pobierzPionek(x + 1, y + 1).pobierzKolor() != kolorPionka) {
+                Pionek nowyPionek = new Pionek(kolorPionka, x + 2, y + 2);
+                kopia.wstawPionek(nowyPionek);
+                kopia.usunPionek(kopia.pobierzPionek(x, y));
+                kopia.usunPionek(kopia.pobierzPionek(x + 1, y + 1));
+                nowaGlebokosc = rekurencyjneSzukanieBicia(nowyPionek, kopia, glebokosc + 1);
+                if (nowaGlebokosc > maksymalnaGlebokosc) {
+                    maksymalnaGlebokosc = nowaGlebokosc;
+                }
+            }
+            return maksymalnaGlebokosc;
         }
-        return moznaDalejBic(pionek.pobierzKolor(), pionek.pobierzWspolrzednaX(), pionek.pobierzWspolrzednaY());
+        else {
+            int xPocz = pionek.pobierzWspolrzednaX();
+            int yPocz = pionek.pobierzWspolrzednaY();
+            int xKonc = xPocz;
+            int yKonc = yPocz;
+            while (xKonc < WYMIAR_PLANSZY - 1 && yKonc < WYMIAR_PLANSZY - 1) {
+                xKonc++;
+                yKonc++;
+            }
+            nowaGlebokosc = glebokoscBiciaDamka(plansza, pionek, xKonc, yKonc, glebokosc);
+            if (nowaGlebokosc > maksymalnaGlebokosc) {
+                maksymalnaGlebokosc = nowaGlebokosc;
+            }
+
+            xKonc = pionek.pobierzWspolrzednaX();
+            yKonc = pionek.pobierzWspolrzednaY();
+            while (xKonc > 0 && yKonc < WYMIAR_PLANSZY - 1) {
+                xKonc--;
+                yKonc++;
+            }
+            nowaGlebokosc = glebokoscBiciaDamka(plansza, pionek, xKonc, yKonc, glebokosc);
+            if (nowaGlebokosc > maksymalnaGlebokosc) {
+                maksymalnaGlebokosc = nowaGlebokosc;
+            }
+
+            xKonc = pionek.pobierzWspolrzednaX();
+            yKonc = pionek.pobierzWspolrzednaY();
+            while (xKonc < WYMIAR_PLANSZY - 1 && yKonc > 0) {
+                xKonc++;
+                yKonc--;
+            }
+            nowaGlebokosc = glebokoscBiciaDamka(plansza, pionek, xKonc, yKonc, glebokosc);
+            if (nowaGlebokosc > maksymalnaGlebokosc) {
+                maksymalnaGlebokosc = nowaGlebokosc;
+            }
+
+            xKonc = pionek.pobierzWspolrzednaX();
+            yKonc = pionek.pobierzWspolrzednaY();
+            while (xKonc > 0 && yKonc > 0) {
+                xKonc--;
+                yKonc--;
+            }
+            nowaGlebokosc = glebokoscBiciaDamka(plansza, pionek, xKonc, yKonc, glebokosc);
+            if (nowaGlebokosc > maksymalnaGlebokosc) {
+                maksymalnaGlebokosc = nowaGlebokosc;
+            }
+            return maksymalnaGlebokosc;
+        }
+    }
+
+    public int glebokoscPoBiciu(char kolorPionka, int xPocz, int yPocz, int xKonc, int yKonc) {
+        if (!moznaDalejBic(kolorPionka, xPocz, yPocz)) {
+            return 0;
+        }
+        Plansza kopia = new Plansza();
+        kopia.ustawWymiar(WYMIAR_PLANSZY);
+        kopia.ustawPionki(new ArrayList<>(plansza.pobierzPionki()));
+        kopia.usunPionek(plansza.pobierzPionek(xPocz, yPocz));
+        int xBity = -1;
+        int yBity = -1;
+        for (int i = 1; i <= Math.abs(xKonc - xPocz); i++) {
+            if (plansza.pobierzPionek(xPocz + (int) Math.signum(xKonc - xPocz) * i, yPocz + (int) Math.signum(yKonc - yPocz) * i) != null) {
+                xBity = xPocz + (int) Math.signum(xKonc - xPocz) * i;
+                yBity = yPocz + (int) Math.signum(yKonc - yPocz) * i;
+            }
+        }
+        kopia.usunPionek(plansza.pobierzPionek(xBity, yBity));
+        Pionek nowyPionek = new Pionek(kolorPionka, xKonc, yKonc);
+        if (plansza.pobierzPionek(xPocz, yPocz).czyDamka()) {
+            nowyPionek.ustawDamka();
+        }
+        kopia.wstawPionek(nowyPionek);
+        return rekurencyjneSzukanieBicia(nowyPionek, kopia, 1);
+    }
+
+    public int glebokoscBiciaDamka(Plansza plansza, Pionek pionek, int xKonc, int yKonc, int glebokosc) {
+        int xPocz = pionek.pobierzWspolrzednaX();
+        int yPocz = pionek.pobierzWspolrzednaY();
+        int licznik = 0;
+        int xBity = -1;
+        int yBity = -1;
+        int nowaGlebokosc;
+        int maksymalnaGlebokosc = glebokosc;
+        for (int i = 1; i <= Math.abs(xKonc - xPocz); i++) {
+            if (plansza.pobierzPionek(xPocz + (int) Math.signum(xKonc - xPocz) * i, yPocz + (int) Math.signum(yKonc - yPocz) * i) != null)
+            {
+                xBity = xPocz + (int) Math.signum(xKonc - xPocz) * i;
+                yBity = yPocz + (int) Math.signum(yKonc - yPocz) * i;
+                if (plansza.pobierzPionek(xBity, yBity).pobierzKolor() == pionek.pobierzKolor()) {
+                    break;
+                }
+                licznik++;
+            }
+            if (licznik == 1 && plansza.pobierzPionek(xPocz + (int) Math.signum(xKonc - xPocz) * (i), yPocz + (int) Math.signum(yKonc - yPocz) * (i)) == null) {
+                Plansza kopia = new Plansza();
+                kopia.ustawWymiar(WYMIAR_PLANSZY);
+                kopia.ustawPionki(new ArrayList<>(plansza.pobierzPionki()));
+                kopia.usunPionek(plansza.pobierzPionek(xBity, yBity));
+                kopia.usunPionek(plansza.pobierzPionek(xPocz, yPocz));
+                Pionek nowyPionek = new Pionek(pionek.pobierzKolor(), xPocz + (int) Math.signum(xKonc - xPocz) * i, yPocz + (int) Math.signum(yKonc - yPocz) * i);
+                nowyPionek.ustawDamka();
+                kopia.wstawPionek(nowyPionek);
+                nowaGlebokosc = rekurencyjneSzukanieBicia(nowyPionek, kopia, glebokosc + 1);
+                if (nowaGlebokosc > maksymalnaGlebokosc) {
+                    maksymalnaGlebokosc = nowaGlebokosc;
+                }
+            }
+            if (licznik > 1) {
+                break;
+            }
+        }
+        return maksymalnaGlebokosc;
     }
 }

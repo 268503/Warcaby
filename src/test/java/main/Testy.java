@@ -12,13 +12,8 @@ public class Testy {
     /**
      *
      */
-//    @Test
-//    public void testKomunikacjiKlientSerwer() {
-//
-//    }
-
     @Test
-    public void testNormalnegoRuchuPionka() {
+    public void testNormalnegoRuchuPionkaWariantKlasyczny() {
         ZarzadcaBudowniczych zarzadcaBudowniczych = new ZarzadcaBudowniczych();
         PlanszaBudowniczy planszaBudowniczy = new PlanszaWariantKlasycznyBudowniczy();
         zarzadcaBudowniczych.ustawPlanszaBudowniczy(planszaBudowniczy);
@@ -39,7 +34,7 @@ public class Testy {
     }
 
     @Test
-    public void testPojedynczegoBiciaPionkiem() {
+    public void testPojedynczegoBiciaPionkiemWariantKlasyczny() {
         ZarzadcaBudowniczych zarzadcaBudowniczych = new ZarzadcaBudowniczych();
         PlanszaBudowniczy planszaBudowniczy = new PlanszaWariantKlasycznyBudowniczy();
         zarzadcaBudowniczych.ustawPlanszaBudowniczy(planszaBudowniczy);
@@ -73,7 +68,7 @@ public class Testy {
     }
 
     @Test
-    public void testNormalnegoRuchuDamka() {
+    public void testNormalnegoRuchuDamkaWariantKlasyczny() {
         ZarzadcaBudowniczych zarzadcaBudowniczych = new ZarzadcaBudowniczych();
         PlanszaBudowniczy planszaBudowniczy = new PlanszaWariantKlasycznyBudowniczy();
         zarzadcaBudowniczych.ustawPlanszaBudowniczy(planszaBudowniczy);
@@ -106,7 +101,7 @@ public class Testy {
     }
 
     @Test
-    public void testPojedynczegoBiciaDamka() {
+    public void testPojedynczegoBiciaDamkaWariantKlasyczny() {
         ZarzadcaBudowniczych zarzadcaBudowniczych = new ZarzadcaBudowniczych();
         PlanszaBudowniczy planszaBudowniczy = new PlanszaWariantKlasycznyBudowniczy();
         zarzadcaBudowniczych.ustawPlanszaBudowniczy(planszaBudowniczy);
@@ -137,7 +132,7 @@ public class Testy {
     }
 
     @Test
-    public void testWielokrotnegoBiciaPionkiem() {
+    public void testWielokrotnegoBiciaPionkiemWariantKlasyczny() {
         ZarzadcaBudowniczych zarzadcaBudowniczych = new ZarzadcaBudowniczych();
         PlanszaBudowniczy planszaBudowniczy = new PlanszaWariantKlasycznyBudowniczy();
         zarzadcaBudowniczych.ustawPlanszaBudowniczy(planszaBudowniczy);
@@ -174,7 +169,7 @@ public class Testy {
     }
 
     @Test
-    public void testWielokrotnegoBiciaDamka() {
+    public void testWielokrotnegoBiciaDamkaWariantKlasyczny() {
         ZarzadcaBudowniczych zarzadcaBudowniczych = new ZarzadcaBudowniczych();
         PlanszaBudowniczy planszaBudowniczy = new PlanszaWariantKlasycznyBudowniczy();
         zarzadcaBudowniczych.ustawPlanszaBudowniczy(planszaBudowniczy);
@@ -249,4 +244,84 @@ public class Testy {
         assertTrue(zarzadcaBudowniczych.zbijPionek('B', 3, 0, 0, 3));
         assertTrue(zarzadcaBudowniczych.zbijPionek('B', 0, 3, 3, 6));
     }
+
+    @Test
+    public void testBiciaDoTyluZwyklymPionkiemWariantHiszpanski() {
+        ZarzadcaBudowniczych zarzadcaBudowniczych = new ZarzadcaBudowniczych();
+        PlanszaBudowniczy planszaBudowniczy = new PlanszaWariantHiszpanskiBudowniczy();
+        zarzadcaBudowniczych.ustawPlanszaBudowniczy(planszaBudowniczy);
+        zarzadcaBudowniczych.skonstruujPlansze();
+
+        Plansza plansza = zarzadcaBudowniczych.pobierzPlansza();
+        zarzadcaBudowniczych.zresetujObecneWspolrzedne();
+        plansza.ustawPionki(new ArrayList<>());
+        plansza.wstawPionek(new Pionek('C', 1, 3));
+        plansza.wstawPionek(new Pionek('C', 3, 3));
+        plansza.wstawPionek(new Pionek('C', 5, 3));
+        plansza.wstawPionek(new Pionek('C', 5, 5));
+        plansza.wstawPionek(new Pionek('B', 4, 4));
+        assertFalse(zarzadcaBudowniczych.zbijPionek('B', 4, 4, 6, 6));
+
+        zarzadcaBudowniczych.zresetujObecneWspolrzedne();
+        plansza.ustawPionki(new ArrayList<>());
+        plansza.wstawPionek(new Pionek('C', 1, 3));
+        plansza.wstawPionek(new Pionek('C', 3, 3));
+        plansza.wstawPionek(new Pionek('C', 5, 3));
+        plansza.wstawPionek(new Pionek('B', 4, 4));
+        assertTrue(zarzadcaBudowniczych.zbijPionek('B', 4, 4, 2, 2));
+        assertFalse(zarzadcaBudowniczych.zbijPionek('B', 2, 2, 0, 4));
+
+        zarzadcaBudowniczych.zresetujObecneWspolrzedne();
+        plansza.ustawPionki(new ArrayList<>());
+        plansza.wstawPionek(new Pionek('C', 1, 3));
+        plansza.wstawPionek(new Pionek('C', 3, 3));
+        plansza.wstawPionek(new Pionek('C', 5, 3));
+        plansza.wstawPionek(new Pionek('B', 4, 4));
+        assertTrue(zarzadcaBudowniczych.zbijPionek('B', 4, 4, 6, 2));
+    }
+
+    @Test
+    public void testWielokrotnegoBiciaPionkiemWariantHiszpanski() {
+        ZarzadcaBudowniczych zarzadcaBudowniczych = new ZarzadcaBudowniczych();
+        PlanszaBudowniczy planszaBudowniczy = new PlanszaWariantHiszpanskiBudowniczy();
+        zarzadcaBudowniczych.ustawPlanszaBudowniczy(planszaBudowniczy);
+        zarzadcaBudowniczych.skonstruujPlansze();
+        Plansza plansza = zarzadcaBudowniczych.pobierzPlansza();
+
+        zarzadcaBudowniczych.zresetujObecneWspolrzedne();
+        plansza.ustawPionki(new ArrayList<>());
+        plansza.wstawPionek(new Pionek('C', 3, 1));
+        plansza.wstawPionek(new Pionek('C', 3, 3));
+        plansza.wstawPionek(new Pionek('C', 3, 5));
+        plansza.wstawPionek(new Pionek('C', 1, 3));
+        plansza.wstawPionek(new Pionek('C', 5, 5));
+        plansza.wstawPionek(new Pionek('B', 6, 6));
+        assertTrue(zarzadcaBudowniczych.zbijPionek('B', 6, 6, 4, 4));
+        assertFalse(zarzadcaBudowniczych.zbijPionek('B', 4, 4, 2, 6));
+        assertTrue(zarzadcaBudowniczych.zbijPionek('B', 4, 4, 2, 2));
+        assertFalse(zarzadcaBudowniczych.zbijPionek('B', 2, 2, 0, 4));
+        assertTrue(zarzadcaBudowniczych.zbijPionek('B', 2, 2, 4, 0));
+    }
+
+    @Test
+    public void testPromocjiWariantPolski() {
+        ZarzadcaBudowniczych zarzadcaBudowniczych = new ZarzadcaBudowniczych();
+        PlanszaBudowniczy planszaBudowniczy = new PlanszaWariantPolskiBudowniczy();
+        zarzadcaBudowniczych.ustawPlanszaBudowniczy(planszaBudowniczy);
+        zarzadcaBudowniczych.skonstruujPlansze();
+        Plansza plansza = zarzadcaBudowniczych.pobierzPlansza();
+
+        plansza.ustawPionki(new ArrayList<>());
+        plansza.wstawPionek(new Pionek('B', 3, 3));
+        assertTrue(zarzadcaBudowniczych.normalnyRuch('B', 3, 3, 2, 2));
+        assertFalse(plansza.pobierzPionek(2, 2).czyDamka());
+        assertTrue(zarzadcaBudowniczych.normalnyRuch('B', 2, 2, 1, 1));
+        assertFalse(plansza.pobierzPionek(1, 1).czyDamka());
+        assertTrue(zarzadcaBudowniczych.normalnyRuch('B', 1, 1, 0, 0));
+        plansza.pobierzPionek(0, 0).ustawDamka();
+        assertTrue(plansza.pobierzPionek(0, 0).czyDamka());
+        assertTrue(zarzadcaBudowniczych.normalnyRuch('B', 0, 0, 5, 5));
+
+    }
+
 }

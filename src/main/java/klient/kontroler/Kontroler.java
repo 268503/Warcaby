@@ -12,29 +12,23 @@ public class Kontroler implements Runnable {
 
     private final Scanner odSerwera;
     private final PrintWriter doSerwera;
-    private static char kolor;
     private PlanszaGUI planszaGUI;
     private Plansza plansza;
     private boolean rozpoczetoGre = false;
     public void ustawPlanszeGUI(PlanszaGUI planszaGUI) {
         this.planszaGUI = planszaGUI;
     }
-    public static char pobierzKolor() {
-        return kolor;
-    }
     @Override
     public void run() {
         try {
             String odpowiedz = odSerwera.nextLine();
-            kolor = odpowiedz.charAt(7);
+            char kolor = odpowiedz.charAt(7);
             planszaGUI.ustawKolor(kolor);
             System.out.println(kolor);
-            char kolorPrzeciwnika = (kolor == 'B' ? 'C' : 'B');
             while (odSerwera.hasNextLine()) {
                 odpowiedz = odSerwera.nextLine();
                 System.out.println("serwer: " + odpowiedz);
                 if (odpowiedz.startsWith("INFO")) {
-                    //TODO: wyświetlić wiadomość
                     System.out.println(odpowiedz.substring(5));
                 }
                 else if (odpowiedz.startsWith("PODAJ_WARIANT")) {
@@ -51,24 +45,15 @@ public class Kontroler implements Runnable {
                     char wariant = odpowiedz.charAt(15);
                     if (wariant == '1') {
                         plansza = new Plansza(8, 'c', 1);
-                        // planszaGUI.ustawPlansze(plansza);
-                        Platform.runLater(() -> {
-                            planszaGUI.odswiez(plansza);
-                        });
+                        Platform.runLater(() -> planszaGUI.odswiez(plansza));
                     }
                     else if (wariant == '2') {
                         plansza = new Plansza(8, 'j', 2);
-                        // planszaGUI.ustawPlansze(plansza);
-                        Platform.runLater(() -> {
-                            planszaGUI.odswiez(plansza);
-                        });
+                        Platform.runLater(() -> planszaGUI.odswiez(plansza));
                     }
                     else if (wariant == '3') {
                         plansza = new Plansza(10, 'c', 3);
-                        // planszaGUI.ustawPlansze(plansza);
-                        Platform.runLater(() -> {
-                            planszaGUI.odswiez(plansza);
-                        });
+                        Platform.runLater(() -> planszaGUI.odswiez(plansza));
                     }
                 }
                 else if (odpowiedz.startsWith("POPRAWNY_NORMALNY_RUCH")) {
@@ -81,9 +66,7 @@ public class Kontroler implements Runnable {
 
                     plansza.ruszPionek(xPocz, yPocz, xKonc, yKonc);
 
-                    Platform.runLater(() -> {
-                        planszaGUI.odswiez(plansza);
-                    });
+                    Platform.runLater(() -> planszaGUI.odswiez(plansza));
                 }
                 else if (odpowiedz.startsWith("POPRAWNY_BICIE_RUCH")) {
                     String[] wspolrzedne = odpowiedz.split(" ");
@@ -96,9 +79,7 @@ public class Kontroler implements Runnable {
                     for (int i = 1; i < Math.abs(xKonc - xPocz); i++) {
                         plansza.usunPionek(xPocz + (int) Math.signum(xKonc - xPocz) * i, yPocz + (int) Math.signum(yKonc - yPocz) * i);
                     }
-                    Platform.runLater(() -> {
-                        planszaGUI.odswiez(plansza);
-                    });
+                    Platform.runLater(() -> planszaGUI.odswiez(plansza));
                 }
                 else if (odpowiedz.startsWith("NORMALNY_RUCH_PRZECIWNIKA")) {
                     String[] wspolrzedne = odpowiedz.split(" ");
@@ -109,9 +90,7 @@ public class Kontroler implements Runnable {
 
                     plansza.ruszPionek(xPocz, yPocz, xKonc, yKonc);
 
-                    Platform.runLater(() -> {
-                        planszaGUI.odswiez(plansza);
-                    });
+                    Platform.runLater(() -> planszaGUI.odswiez(plansza));
                 }
                 else if (odpowiedz.startsWith("BICIE_RUCH_PRZECIWNIKA")) {
                     String[] wspolrzedne = odpowiedz.split(" ");
@@ -125,9 +104,7 @@ public class Kontroler implements Runnable {
                     for (int i = 1; i < Math.abs(xKonc - xPocz); i++) {
                         plansza.usunPionek(xPocz + (int) Math.signum(xKonc - xPocz) * i, yPocz + (int) Math.signum(yKonc - yPocz) * i);
                     }
-                    Platform.runLater(() -> {
-                        planszaGUI.odswiez(plansza);
-                    });
+                    Platform.runLater(() -> planszaGUI.odswiez(plansza));
                 }
                 else if (odpowiedz.startsWith("PROMOCJA")) {
                     String[] wspolrzedne = odpowiedz.split(" ");
@@ -135,14 +112,11 @@ public class Kontroler implements Runnable {
                     int y = Integer.parseInt(wspolrzedne[2]);
 
                     plansza.pobierzPole(x, y).pobierzPionek().ustawDamka();
-                    Platform.runLater(() -> {
-                        planszaGUI.odswiez(plansza);
-                    });
+                    Platform.runLater(() -> planszaGUI.odswiez(plansza));
                 }
                 else if (odpowiedz.startsWith("START")) {
                     rozpoczetoGre = true;
                 }
-                //TODO: zaimplementować obsługę reszty komend
             }
         } catch (Exception e) {
             System.out.println("cos jest nie tak z klientem");
