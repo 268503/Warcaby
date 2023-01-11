@@ -5,16 +5,6 @@ import java.util.ArrayList;
 public class PlanszaWariantHiszpanskiBudowniczy extends PlanszaBudowniczy {
     private static final int WYMIAR_PLANSZY = 8;
     @Override
-    public boolean istniejeBicie(char kolor) {
-        boolean bicieDostepne = false;
-        for (Pionek pionek : plansza.pobierzPionki()) {
-            if (!bicieDostepne && moznaDalejBic(pionek.pobierzKolor(), pionek.pobierzWspolrzednaX(), pionek.pobierzWspolrzednaY()) && pionek.pobierzKolor() == kolor) {
-                bicieDostepne = true;
-            }
-        }
-        return bicieDostepne;
-    }
-    @Override
     public void poczatkoweUstawienie() {
         plansza = new Plansza();
         plansza.ustawPionki(new ArrayList<>());
@@ -22,70 +12,21 @@ public class PlanszaWariantHiszpanskiBudowniczy extends PlanszaBudowniczy {
         for (int x = 0; x < WYMIAR_PLANSZY; x++) {
             for (int y = 0; y < WYMIAR_PLANSZY; y++) {
                 if ((x + y) % 2 == 0) {
-                    //**********normalne warcaby
                     if (y < 3) {
-//                        pobierzPole(x, y).ustawPionek(new Pionek('C', x, y));
                         plansza.wstawPionek(new Pionek('C', x, y));
                     }
                     else if (y > 4) {
-//                        pobierzPole(x, y).ustawPionek(new Pionek('B', x, y));
                         plansza.wstawPionek(new Pionek('B', x, y));
                     }
-                    //*********koniec
                 }
             }
         }
-
-        // !!! testowe początkowe ułożenie planszy (damka)
-
-//        wstawPionek(new Pionek('B', 1, 6));
-//        pobierzPionek(1, 6).ustawDamka();
-//        wstawPionek(new Pionek('C', 3, 4));
-//        wstawPionek(new Pionek('C', 6, 3));
-//        wstawPionek(new Pionek('C', 6, 5));
-//        wstawPionek(new Pionek('C', 4, 7));
-
-        // !!! testowe początkowe ułożenie planszy (edge case ultimate)
-//        wstawPionek(new Pionek('B', 3, 5));
-//        wstawPionek(new Pionek('C', 4, 4));
-//        wstawPionek(new Pionek('C', 5, 5));
-//        wstawPionek(new Pionek('B', 6, 6));
-//        wstawPionek(new Pionek('C', 6, 2));
-        // !!! testowe początkowe ułożeniee planszy (remis) (
-//        wstawPionek(new Pionek('B', 0, 1));
-//        pobierzPionek(0, 1).ustawDamka();
-//        wstawPionek(new Pionek('B', 3, 6));
-//        wstawPionek(new Pionek('C', 4, 3));
-//        pobierzPionek(4, 3).ustawDamka();
-//        wstawPionek(new Pionek('C', 2, 7));
-        // nie dzialalo w hispzanskim
-//        plansza.wstawPionek(new Pionek('C', 7, 1) );
-//        plansza.wstawPionek(new Pionek('B', 3, 1));
-//        plansza.pobierzPionek(3, 1).ustawDamka();
-//        plansza.wstawPionek(new Pionek('B', 3, 3));
-//        plansza.pobierzPionek(3, 3).ustawDamka();
-//        plansza.wstawPionek(new Pionek('B', 7, 5));
-//        plansza.wstawPionek(new Pionek('B', 3, 5));
-//        plansza.wstawPionek(new Pionek('B', 0, 6));
-//        plansza.wstawPionek(new Pionek('B', 7, 7));
-//        plansza.wstawPionek(new Pionek('B', 5, 7));
-//        plansza.wstawPionek(new Pionek('C', 1, 7));
-//        plansza.pobierzPionek(1, 7).ustawDamka();
-
-        // hiszpański lichess
-//        plansza.wstawPionek(new Pionek('C', 1, 3));
-//        plansza.wstawPionek(new Pionek('C', 3, 3));
-//        plansza.wstawPionek(new Pionek('C', 5, 3));
-//        plansza.wstawPionek(new Pionek('B', 4, 4));
-
     }
 
-
     @Override
-    public boolean zbijPionek(char kolorPionka, int xPocz, int yPocz, int xKonc, int yKonc) {
-        int wymaganaDlugoscBicia = znajdzNajlepszeBicie(plansza, kolorPionka);
-        System.out.println("to bicie daje " + glebokoscPoBiciu(kolorPionka, xPocz, yPocz, xKonc, yKonc) + " a trzeba " + wymaganaDlugoscBicia);
-        if (!(glebokoscPoBiciu(kolorPionka, xPocz, yPocz, xKonc, yKonc) == wymaganaDlugoscBicia)) {
+    public boolean zbijPionek(final char kolorPionka, final int xPocz, final int yPocz, final int xKonc, final int yKonc) {
+        final int wymaganaDlugoscBicia = znajdzNajlepszeBicie(plansza, kolorPionka);
+        if (glebokoscPoBiciu(kolorPionka, xPocz, yPocz, xKonc, yKonc) != wymaganaDlugoscBicia) {
             return false;
         }
         if (!((xAktualny == -1 && yAktualny == -1) || (xAktualny == xPocz && yAktualny == yPocz))) {
@@ -95,10 +36,10 @@ public class PlanszaWariantHiszpanskiBudowniczy extends PlanszaBudowniczy {
             if (plansza.pobierzPionek((xPocz + xKonc) / 2, (yPocz + yKonc) / 2) == null) {
                 return false;
             }
-            boolean pionekPomiedzy = (kolorPionka == 'B' && plansza.pobierzPionek((xPocz + xKonc) / 2, (yPocz + yKonc) / 2).pobierzKolor() == 'C')
+            final boolean pionekPomiedzy = (kolorPionka == 'B' && plansza.pobierzPionek((xPocz + xKonc) / 2, (yPocz + yKonc) / 2).pobierzKolor() == 'C')
                     || (kolorPionka == 'C' && plansza.pobierzPionek((xPocz + xKonc) / 2, (yPocz + yKonc) / 2).pobierzKolor() == 'B');
-            if (((kolorPionka == 'B' && (yKonc == yPocz - 2 /*|| yKonc == yPocz + 2*/) && (xKonc == xPocz - 2 || xKonc == xPocz + 2))
-                    || (kolorPionka == 'C' && (/*yKonc == yPocz - 2 ||*/ yKonc == yPocz + 2) && (xKonc == xPocz - 2 || xKonc == xPocz + 2)))
+            if (((kolorPionka == 'B' && (yKonc == yPocz - 2) && (xKonc == xPocz - 2 || xKonc == xPocz + 2))
+                    || (kolorPionka == 'C' && ( yKonc == yPocz + 2) && (xKonc == xPocz - 2 || xKonc == xPocz + 2)))
                     && pionekPomiedzy) {
                 plansza.pobierzPionek(xPocz, yPocz).przesun(xKonc, yKonc);
                 plansza.usunPionek(plansza.pobierzPionek(xPocz, yPocz));
@@ -153,7 +94,7 @@ public class PlanszaWariantHiszpanskiBudowniczy extends PlanszaBudowniczy {
         return false;
     }
     @Override
-    public boolean normalnyRuch(char kolorPionka, int xPocz, int yPocz, int xKonc, int yKonc) {
+    public boolean normalnyRuch(final char kolorPionka, final int xPocz, final int yPocz, final int xKonc, final int yKonc) {
         if (istniejeBicie(kolorPionka)) {
             return false;
         }
@@ -172,7 +113,7 @@ public class PlanszaWariantHiszpanskiBudowniczy extends PlanszaBudowniczy {
         return false;
     }
     @Override
-    public boolean moznaNormalnyRuch(char kolorPionka, int xPocz, int yPocz, int xKonc, int yKonc) {
+    public boolean moznaNormalnyRuch(final char kolorPionka, final int xPocz, final int yPocz, final int xKonc, final int yKonc) {
         if (!plansza.pobierzPionek(xPocz, yPocz).czyDamka()) {
             return (kolorPionka == 'B' && yKonc == yPocz - 1 && (xKonc == xPocz - 1 || xKonc == xPocz + 1))
                     || (kolorPionka == 'C' && yKonc == yPocz + 1 && (xKonc == xPocz - 1 || xKonc == xPocz + 1));
@@ -190,12 +131,12 @@ public class PlanszaWariantHiszpanskiBudowniczy extends PlanszaBudowniczy {
         }
     }
     @Override
-    public boolean moznaDalejBic(char kolorPionka, int x, int y) {
+    public boolean moznaDalejBic(final char kolorPionka, final int x, final int y) {
         if (!plansza.pobierzPionek(x, y).czyDamka()) {
-            return (   (kolorPionka == 'B' && x > 1 && y > 1 && plansza.pobierzPionek(x-1, y-1) != null && plansza.pobierzPionek(x-2, y-2)==null && plansza.pobierzPionek(x-1, y-1).pobierzKolor() != kolorPionka)
-                    || (kolorPionka == 'C' && x > 1 && y < plansza.pobierzWymiar() - 2 && plansza.pobierzPionek(x-1, y+1) != null && plansza.pobierzPionek(x-2, y+2)==null && plansza.pobierzPionek(x-1, y+1).pobierzKolor() != kolorPionka)
-                    || (kolorPionka == 'B' && x < plansza.pobierzWymiar() - 2 && y > 1 && plansza.pobierzPionek(x+1, y-1) != null && plansza.pobierzPionek(x+2, y-2)==null && plansza.pobierzPionek(x+1, y-1).pobierzKolor() != kolorPionka)
-                    || (kolorPionka == 'C' && x < plansza.pobierzWymiar() - 2 && y < plansza.pobierzWymiar() - 2 && plansza.pobierzPionek(x+1, y+1) != null && plansza.pobierzPionek(x+2, y+2)==null && plansza.pobierzPionek(x+1, y+1).pobierzKolor() != kolorPionka));
+            return (   (kolorPionka == 'B' && x > 1 && y > 1 && plansza.pobierzPionek(x - 1, y - 1) != null && plansza.pobierzPionek(x - 2, y - 2) == null && plansza.pobierzPionek(x - 1, y - 1).pobierzKolor() != kolorPionka)
+                    || (kolorPionka == 'C' && x > 1 && y < plansza.pobierzWymiar() - 2 && plansza.pobierzPionek(x - 1, y + 1) != null && plansza.pobierzPionek(x - 2, y + 2) == null && plansza.pobierzPionek(x - 1, y + 1).pobierzKolor() != kolorPionka)
+                    || (kolorPionka == 'B' && x < plansza.pobierzWymiar() - 2 && y > 1 && plansza.pobierzPionek(x + 1, y - 1) != null && plansza.pobierzPionek(x + 2, y - 2) == null && plansza.pobierzPionek(x + 1, y - 1).pobierzKolor() != kolorPionka)
+                    || (kolorPionka == 'C' && x < plansza.pobierzWymiar() - 2 && y < plansza.pobierzWymiar() - 2 && plansza.pobierzPionek(x + 1, y + 1) != null && plansza.pobierzPionek(x + 2, y + 2) == null && plansza.pobierzPionek(x + 1, y + 1).pobierzKolor() != kolorPionka));
         }
         else {
             int i = 1;
@@ -229,15 +170,15 @@ public class PlanszaWariantHiszpanskiBudowniczy extends PlanszaBudowniczy {
             return false;
         }
     }
-    public int znajdzNajlepszeBicie(Plansza plansza, char kolor) {
-        Plansza kopia = new Plansza();
+    public int znajdzNajlepszeBicie(final Plansza plansza, final char kolor) {
+        final Plansza kopia = new Plansza();
         kopia.ustawWymiar(WYMIAR_PLANSZY);
         kopia.ustawPionki(plansza.pobierzPionki());
         int maksymalnaDlugoscBicia = 0;
         int dlugosc;
         for (int i = 0; i < WYMIAR_PLANSZY; i++) {
             for (int j = 0; j < WYMIAR_PLANSZY; j++) {
-                Pionek pionek = kopia.pobierzPionek(i, j);
+                final Pionek pionek = kopia.pobierzPionek(i, j);
                 if (pionek != null && pionek.pobierzKolor() == kolor) {
                     dlugosc = rekurencyjneSzukanieBicia(pionek, kopia, 0);
                     if (dlugosc > maksymalnaDlugoscBicia) {
@@ -249,18 +190,18 @@ public class PlanszaWariantHiszpanskiBudowniczy extends PlanszaBudowniczy {
         return maksymalnaDlugoscBicia;
     }
 
-    public int rekurencyjneSzukanieBicia(Pionek pionek, Plansza plansza, int glebokosc) {
+    public int rekurencyjneSzukanieBicia(final Pionek pionek, final Plansza plansza, final int glebokosc) {
         int maksymalnaGlebokosc = glebokosc;
         int nowaGlebokosc;
         if (!pionek.czyDamka()) {
-            Plansza kopia = new Plansza();
+            final Plansza kopia = new Plansza();
             kopia.ustawWymiar(WYMIAR_PLANSZY);
             kopia.ustawPionki(new ArrayList<>(plansza.pobierzPionki()));
-            int x = pionek.pobierzWspolrzednaX();
-            int y = pionek.pobierzWspolrzednaY();
-            char kolorPionka = pionek.pobierzKolor();
+            final int x = pionek.pobierzWspolrzednaX();
+            final int y = pionek.pobierzWspolrzednaY();
+            final char kolorPionka = pionek.pobierzKolor();
             if (kolorPionka == 'B' && x > 1 && y > 1 && plansza.pobierzPionek(x - 1, y - 1) != null && plansza.pobierzPionek(x - 2, y - 2) == null && plansza.pobierzPionek(x - 1, y - 1).pobierzKolor() != kolorPionka) {
-                Pionek nowyPionek = new Pionek(kolorPionka, x - 2, y - 2);
+                final Pionek nowyPionek = new Pionek(kolorPionka, x - 2, y - 2);
                 kopia.wstawPionek(nowyPionek);
                 kopia.usunPionek(kopia.pobierzPionek(x, y));
                 kopia.usunPionek(kopia.pobierzPionek(x - 1, y - 1));
@@ -271,7 +212,7 @@ public class PlanszaWariantHiszpanskiBudowniczy extends PlanszaBudowniczy {
             }
             kopia.ustawPionki(new ArrayList<>(plansza.pobierzPionki()));
             if (kolorPionka == 'C' && x > 1 && y < plansza.pobierzWymiar() - 2 && plansza.pobierzPionek(x - 1, y + 1) != null && plansza.pobierzPionek(x - 2, y + 2) == null && plansza.pobierzPionek(x - 1, y + 1).pobierzKolor() != kolorPionka) {
-                Pionek nowyPionek = new Pionek(kolorPionka, x - 2, y + 2);
+                final Pionek nowyPionek = new Pionek(kolorPionka, x - 2, y + 2);
                 kopia.wstawPionek(nowyPionek);
                 kopia.usunPionek(kopia.pobierzPionek(x, y));
                 kopia.usunPionek(kopia.pobierzPionek(x - 1, y + 1));
@@ -282,7 +223,7 @@ public class PlanszaWariantHiszpanskiBudowniczy extends PlanszaBudowniczy {
             }
             kopia.ustawPionki(new ArrayList<>(plansza.pobierzPionki()));
             if (kolorPionka == 'B' && x < plansza.pobierzWymiar() - 2 && y > 1 && plansza.pobierzPionek(x + 1, y - 1) != null && plansza.pobierzPionek(x + 2, y - 2) == null && plansza.pobierzPionek(x + 1, y - 1).pobierzKolor() != kolorPionka) {
-                Pionek nowyPionek = new Pionek(kolorPionka, x + 2, y - 2);
+                final Pionek nowyPionek = new Pionek(kolorPionka, x + 2, y - 2);
                 kopia.wstawPionek(nowyPionek);
                 kopia.usunPionek(kopia.pobierzPionek(x, y));
                 kopia.usunPionek(kopia.pobierzPionek(x + 1, y - 1));
@@ -293,7 +234,7 @@ public class PlanszaWariantHiszpanskiBudowniczy extends PlanszaBudowniczy {
             }
             kopia.ustawPionki(new ArrayList<>(plansza.pobierzPionki()));
             if (kolorPionka == 'C' && x < plansza.pobierzWymiar() - 2 && y < plansza.pobierzWymiar() - 2 && plansza.pobierzPionek(x + 1, y + 1) != null && plansza.pobierzPionek(x + 2, y + 2) == null && plansza.pobierzPionek(x + 1, y + 1).pobierzKolor() != kolorPionka) {
-                Pionek nowyPionek = new Pionek(kolorPionka, x + 2, y + 2);
+                final Pionek nowyPionek = new Pionek(kolorPionka, x + 2, y + 2);
                 kopia.wstawPionek(nowyPionek);
                 kopia.usunPionek(kopia.pobierzPionek(x, y));
                 kopia.usunPionek(kopia.pobierzPionek(x + 1, y + 1));
@@ -302,11 +243,10 @@ public class PlanszaWariantHiszpanskiBudowniczy extends PlanszaBudowniczy {
                     maksymalnaGlebokosc = nowaGlebokosc;
                 }
             }
-            return maksymalnaGlebokosc;
         }
         else {
-            int xPocz = pionek.pobierzWspolrzednaX();
-            int yPocz = pionek.pobierzWspolrzednaY();
+            final int xPocz = pionek.pobierzWspolrzednaX();
+            final int yPocz = pionek.pobierzWspolrzednaY();
             int xKonc = xPocz;
             int yKonc = yPocz;
             while (xKonc < WYMIAR_PLANSZY - 1 && yKonc < WYMIAR_PLANSZY - 1) {
@@ -350,15 +290,15 @@ public class PlanszaWariantHiszpanskiBudowniczy extends PlanszaBudowniczy {
             if (nowaGlebokosc > maksymalnaGlebokosc) {
                 maksymalnaGlebokosc = nowaGlebokosc;
             }
-            return maksymalnaGlebokosc;
         }
+        return maksymalnaGlebokosc;
     }
 
-    public int glebokoscPoBiciu(char kolorPionka, int xPocz, int yPocz, int xKonc, int yKonc) {
+    public int glebokoscPoBiciu(final char kolorPionka, final int xPocz, final int yPocz, final int xKonc, final int yKonc) {
         if (!moznaDalejBic(kolorPionka, xPocz, yPocz)) {
             return 0;
         }
-        Plansza kopia = new Plansza();
+        final Plansza kopia = new Plansza();
         kopia.ustawWymiar(WYMIAR_PLANSZY);
         kopia.ustawPionki(new ArrayList<>(plansza.pobierzPionki()));
         kopia.usunPionek(plansza.pobierzPionek(xPocz, yPocz));
@@ -371,7 +311,7 @@ public class PlanszaWariantHiszpanskiBudowniczy extends PlanszaBudowniczy {
             }
         }
         kopia.usunPionek(plansza.pobierzPionek(xBity, yBity));
-        Pionek nowyPionek = new Pionek(kolorPionka, xKonc, yKonc);
+        final Pionek nowyPionek = new Pionek(kolorPionka, xKonc, yKonc);
         if (plansza.pobierzPionek(xPocz, yPocz).czyDamka()) {
             nowyPionek.ustawDamka();
         }
@@ -379,9 +319,9 @@ public class PlanszaWariantHiszpanskiBudowniczy extends PlanszaBudowniczy {
         return rekurencyjneSzukanieBicia(nowyPionek, kopia, 1);
     }
 
-    public int glebokoscBiciaDamka(Plansza plansza, Pionek pionek, int xKonc, int yKonc, int glebokosc) {
-        int xPocz = pionek.pobierzWspolrzednaX();
-        int yPocz = pionek.pobierzWspolrzednaY();
+    public int glebokoscBiciaDamka(final Plansza plansza, final Pionek pionek, final int xKonc, final int yKonc, final int glebokosc) {
+        final int xPocz = pionek.pobierzWspolrzednaX();
+        final int yPocz = pionek.pobierzWspolrzednaY();
         int licznik = 0;
         int xBity = -1;
         int yBity = -1;
@@ -398,12 +338,12 @@ public class PlanszaWariantHiszpanskiBudowniczy extends PlanszaBudowniczy {
                 licznik++;
             }
             if (licznik == 1 && plansza.pobierzPionek(xPocz + (int) Math.signum(xKonc - xPocz) * (i), yPocz + (int) Math.signum(yKonc - yPocz) * (i)) == null) {
-                Plansza kopia = new Plansza();
+                final Plansza kopia = new Plansza();
                 kopia.ustawWymiar(WYMIAR_PLANSZY);
                 kopia.ustawPionki(new ArrayList<>(plansza.pobierzPionki()));
                 kopia.usunPionek(plansza.pobierzPionek(xBity, yBity));
                 kopia.usunPionek(plansza.pobierzPionek(xPocz, yPocz));
-                Pionek nowyPionek = new Pionek(pionek.pobierzKolor(), xPocz + (int) Math.signum(xKonc - xPocz) * i, yPocz + (int) Math.signum(yKonc - yPocz) * i);
+                final Pionek nowyPionek = new Pionek(pionek.pobierzKolor(), xPocz + (int) Math.signum(xKonc - xPocz) * i, yPocz + (int) Math.signum(yKonc - yPocz) * i);
                 nowyPionek.ustawDamka();
                 kopia.wstawPionek(nowyPionek);
                 nowaGlebokosc = rekurencyjneSzukanieBicia(nowyPionek, kopia, glebokosc + 1);

@@ -18,7 +18,7 @@ public class Gra {
         private Scanner odGracza;
         private PrintWriter doGracza;
 
-        public Gracz(Socket gniazdo, char kolor) {
+        public Gracz(final Socket gniazdo, final char kolor) {
             this.gniazdo = gniazdo;
             this.kolor = kolor;
         }
@@ -40,16 +40,16 @@ public class Gra {
 
         private void przetwarzajKomendy() {
             while (odGracza.hasNextLine() && obecnyGracz != null) {
-                String komenda = odGracza.nextLine();
+                final String komenda = odGracza.nextLine();
                 System.out.println(kolor + " " + komenda);
                 if (komenda.startsWith("WYJDŹ")) {
                     return;
                 } else if (komenda.startsWith("RUCH")) {
-                    String[] wspolrzedne = komenda.split(" ");
-                    int xPocz = Integer.parseInt(wspolrzedne[1]);
-                    int yPocz = Integer.parseInt(wspolrzedne[2]);
-                    int xKonc = Integer.parseInt(wspolrzedne[3]);
-                    int yKonc = Integer.parseInt(wspolrzedne[4]);
+                    final String[] wspolrzedne = komenda.split(" ");
+                    final int xPocz = Integer.parseInt(wspolrzedne[1]);
+                    final int yPocz = Integer.parseInt(wspolrzedne[2]);
+                    final int xKonc = Integer.parseInt(wspolrzedne[3]);
+                    final int yKonc = Integer.parseInt(wspolrzedne[4]);
 
                     if (obecnyGracz.kolor == kolor && plansza.ruszPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
                         if (zarzadcaBudowniczych.istniejeBicie(obecnyGracz.kolor)) {
@@ -64,7 +64,6 @@ public class Gra {
                                 doGracza.println("PROMOCJA " + xKonc + " " + yKonc);
                                 przeciwnik.doGracza.println("PROMOCJA " + xKonc + " " + yKonc);
                             }
-                            //TODO potencjalnie wrzucić do metody
                             if (zarzadcaBudowniczych.czyWygrana(kolor)) {
                                 doGracza.println("WYGRANA " + kolor);
                                 przeciwnik.doGracza.println("WYGRANA " + kolor);
@@ -158,7 +157,6 @@ public class Gra {
                 ustaw();
                 przetwarzajKomendy();
             } catch (Exception e) {
-                e.printStackTrace();
                 System.out.println("Coś jest nie tak z serwerem");
             } finally {
                 if (przeciwnik != null && przeciwnik.doGracza != null) {
@@ -170,7 +168,6 @@ public class Gra {
                     e.printStackTrace();
                 }
             }
-
         }
     }
 }

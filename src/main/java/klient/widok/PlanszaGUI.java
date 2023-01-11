@@ -8,26 +8,25 @@ import klient.kontroler.Kontroler;
 import klient.model.Plansza;
 
 public class PlanszaGUI extends GridPane {
-    // private Plansza plansza;
     private char kolor;
     private final Kontroler kontroler;
     private int statusRuchu = 0;
     private int xPocz, yPocz;
-    public PlanszaGUI(Kontroler kontroler) {
+    public PlanszaGUI(final Kontroler kontroler) {
         this.kontroler = kontroler;
     }
 
-    public void ustawKolor(char kolor) {
+    public void ustawKolor(final char kolor) {
         this.kolor = kolor;
     }
 
-    public void odswiez(Plansza plansza) {
+    public void odswiez(final Plansza plansza) {
         getChildren().clear();
 
         if (kolor == 'B') {
             for (int kolumna = 0; kolumna < plansza.pobierzWymiar(); kolumna++) {
                 for (int wiersz = 0; wiersz < plansza.pobierzWymiar(); wiersz++) {
-                    PoleGUI poleGUI = new PoleGUI(plansza.pobierzPole(kolumna, wiersz));
+                    final PoleGUI poleGUI = new PoleGUI(plansza.pobierzPole(kolumna, wiersz));
                     final int wspolrzednaX = kolumna;
                     final int wspolrzednaY = wiersz;
                     poleGUI.setOnMousePressed(zdarzenie -> {
@@ -38,7 +37,7 @@ public class PlanszaGUI extends GridPane {
                         }
                     });
                     add(poleGUI, kolumna, wiersz);
-                    PionekGUI pionekGUI = new PoleGUI(plansza.pobierzPole(kolumna, wiersz)).pobierzPionekGUI();
+                    final PionekGUI pionekGUI = new PoleGUI(plansza.pobierzPole(kolumna, wiersz)).pobierzPionekGUI();
                     pionekGUI.setOnMousePressed(zdarzenie -> {
                         if (statusRuchu == 0) {
                             xPocz = wspolrzednaX;
@@ -53,7 +52,7 @@ public class PlanszaGUI extends GridPane {
         else {
             for (int kolumna = 0; kolumna < plansza.pobierzWymiar(); kolumna++) {
                 for (int wiersz = 0; wiersz < plansza.pobierzWymiar(); wiersz++) {
-                    PoleGUI poleGUI = new PoleGUI(plansza.pobierzPole(kolumna, wiersz));
+                    final PoleGUI poleGUI = new PoleGUI(plansza.pobierzPole(kolumna, wiersz));
                     final int wspolrzednaX = kolumna;
                     final int wspolrzednaY = wiersz;
                     poleGUI.setOnMousePressed(zdarzenie -> {
@@ -64,7 +63,7 @@ public class PlanszaGUI extends GridPane {
                         }
                     });
                     add(poleGUI, plansza.pobierzWymiar() - 1 - kolumna, plansza.pobierzWymiar() - 1 - wiersz);
-                    PionekGUI pionekGUI = new PoleGUI(plansza.pobierzPole(kolumna, wiersz)).pobierzPionekGUI();
+                    final PionekGUI pionekGUI = new PoleGUI(plansza.pobierzPole(kolumna, wiersz)).pobierzPionekGUI();
                     pionekGUI.setOnMousePressed(zdarzenie -> {
                         if (statusRuchu == 0) {
                             xPocz = wspolrzednaX;
@@ -77,14 +76,9 @@ public class PlanszaGUI extends GridPane {
             }
         }
 
-
-        for (Node element : getChildren()) {
+        for (final Node element : getChildren()) {
             setHalignment(element, HPos.CENTER);
         }
         setAlignment(Pos.CENTER);
     }
-//    public void ustawPlansze(Plansza plansza) {
-//        this.plansza = plansza;
-//    }
-
 }

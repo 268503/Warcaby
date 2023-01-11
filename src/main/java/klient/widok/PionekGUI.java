@@ -5,7 +5,7 @@ import javafx.scene.shape.Circle;
 import klient.model.Pionek;
 
 public class PionekGUI extends Circle {
-    public PionekGUI(Pionek pionek) {
+    public PionekGUI(final Pionek pionek) {
         if (pionek != null) {
             if (pionek.pobierzKolor() == 'B') {
                 setFill(Color.rgb(254, 254, 241));
@@ -21,5 +21,4 @@ public class PionekGUI extends Circle {
             setRadius(20);
         }
     }
-    //public void promuj() //???
 }

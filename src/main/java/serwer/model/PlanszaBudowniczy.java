@@ -7,30 +7,35 @@ public abstract class PlanszaBudowniczy {
     public Plansza pobierzPlansza() {
         return plansza;
     }
-    abstract public boolean istniejeBicie(char kolor);
     abstract public void poczatkoweUstawienie();
     abstract public boolean zbijPionek(char kolorPionka, int xPocz, int yPocz, int xKonc, int yKonc);
     abstract public boolean normalnyRuch(char kolorPionka, int xPocz, int yPocz, int xKonc, int yKonc);
     abstract public boolean moznaNormalnyRuch(char kolorPionka, int xPocz, int yPocz, int xKonc, int yKonc);
     abstract public boolean moznaDalejBic(char kolorPionka, int x, int y);
+    public boolean istniejeBicie(final char kolor) {
+        boolean bicieDostepne = false;
+        for (final Pionek pionek : plansza.pobierzPionki()) {
+            if (!bicieDostepne && moznaDalejBic(pionek.pobierzKolor(), pionek.pobierzWspolrzednaX(), pionek.pobierzWspolrzednaY()) && pionek.pobierzKolor() == kolor) {
+                bicieDostepne = true;
+            }
+        }
+        return bicieDostepne;
+    }
     public boolean czyRemis() {
         return plansza.pobierzLicznikRuchow() == Plansza.LIMIT_RUCHOW;
     }
-    public boolean czyWygrana(char kolor) {
-        for (Pionek pionek : plansza.pobierzPionki()) {
-            if (pionek.pobierzKolor() != kolor) {
-                if (czyMoznaRuszyc(pionek)) {
-                    return false;
-                }
+    public boolean czyWygrana(final char kolor) {
+        for (final Pionek pionek : plansza.pobierzPionki()) {
+            if (pionek.pobierzKolor() != kolor && czyMoznaRuszyc(pionek)) {
+                return false;
             }
         }
         return true;
     }
-
-    public boolean czyMoznaRuszyc(Pionek pionek) {
-        char kolor = pionek.pobierzKolor();
-        int x = pionek.pobierzWspolrzednaX();
-        int y = pionek.pobierzWspolrzednaY();
+    public boolean czyMoznaRuszyc(final Pionek pionek) {
+        final char kolor = pionek.pobierzKolor();
+        final int x = pionek.pobierzWspolrzednaX();
+        final int y = pionek.pobierzWspolrzednaY();
         if (   (plansza.ruszPionek(kolor, x, y, x + 1, y - 1) && moznaNormalnyRuch(kolor, x, y, x + 1, y - 1))
                 || (plansza.ruszPionek(kolor, x, y, x - 1, y - 1) && moznaNormalnyRuch(kolor, x, y, x - 1, y - 1))
                 || (plansza.ruszPionek(kolor, x, y, x + 1, y + 1) && moznaNormalnyRuch(kolor, x, y, x + 1, y + 1))

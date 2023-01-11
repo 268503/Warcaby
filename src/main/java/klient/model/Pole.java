@@ -4,7 +4,7 @@ public class Pole {
     private final char kolorPola;
     private Pionek pionek;
 
-    public Pole(char kolor) {
+    public Pole(final char kolor) {
         kolorPola = kolor;
     }
 
@@ -16,7 +16,7 @@ public class Pole {
         return pionek;
     }
 
-    public void ustawPionek(Pionek pionek) {
+    public void ustawPionek(final Pionek pionek) {
         this.pionek = pionek;
     }
 }

@@ -13,17 +13,15 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class Klient extends Application {
-    private Socket gniazdo;
-    private Scanner odSerwera;
     private PrintWriter doSerwera;
     private Kontroler kontroler;
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         launch();
     }
 
     @Override
-    public void start(Stage scena) {
+    public void start(final Stage scena) {
         String adresSerwera;
         Thread watekKontrolera;
 
@@ -31,7 +29,7 @@ public class Klient extends Application {
             try {
                 doSerwera.println("WYJDŹ");
             } catch (Exception e) {
-
+                System.out.println("Nie jesteś połączony z serwerem");
             }
         });
 
@@ -42,18 +40,18 @@ public class Klient extends Application {
         wprowadzanieIpDialog.showAndWait();
         adresSerwera = wprowadzanieIpDialog.getEditor().getText();
         try {
-            gniazdo = new Socket(adresSerwera, 55555);
-            odSerwera = new Scanner(gniazdo.getInputStream());
+            final Socket gniazdo = new Socket(adresSerwera, 44444);
+            final Scanner odSerwera = new Scanner(gniazdo.getInputStream());
             doSerwera = new PrintWriter(gniazdo.getOutputStream(), true);
             kontroler = new Kontroler(odSerwera, doSerwera);
         } catch (Exception e) {
-
+            System.out.println("Nie udało się połączyć z serwerem");
         }
         final BorderPane korzen = new BorderPane();
         final PlanszaGUI planszaGUI = new PlanszaGUI(kontroler);
         kontroler.ustawPlanszeGUI(planszaGUI);
         korzen.setCenter(planszaGUI);
-        scena.setScene(new Scene(korzen, 720, 480));
+        scena.setScene(new Scene(korzen, 720, 600));
         scena.show();
         try {
             watekKontrolera = new Thread(kontroler);

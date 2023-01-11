@@ -3,7 +3,7 @@ package klient.model;
 public class Pionek {
     private final char kolor;
     private boolean damka = false;
-    public Pionek(char kolor) {
+    public Pionek(final char kolor) {
         this.kolor = kolor;
     }
     public char pobierzKolor() {

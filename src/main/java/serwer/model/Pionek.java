@@ -6,7 +6,7 @@ public class Pionek {
     private int wspolrzednaX;
     private int wspolrzednaY;
 
-    public Pionek(char kolor, int x, int y) {
+    public Pionek(final char kolor, final int x, final int y) {
         this.kolor = kolor;
         wspolrzednaX = x;
         wspolrzednaY = y;
@@ -21,7 +21,7 @@ public class Pionek {
     public int pobierzWspolrzednaY() {
         return wspolrzednaY;
     }
-    public void przesun(int x, int y) {
+    public void przesun(final int x, final int y) {
         wspolrzednaX = x;
         wspolrzednaY = y;
     }
