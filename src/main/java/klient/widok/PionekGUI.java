@@ -4,7 +4,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import klient.model.Pionek;
 
+/**
+ * Klasa dla Pionka widokowego
+ */
 public class PionekGUI extends Circle {
+    /**
+     * Główny konstruktor
+     * @param pionek pionek modelowy, na podstawie którego tworzony jest pionek widokowy
+     */
     public PionekGUI(final Pionek pionek) {
         if (pionek != null) {
             if (pionek.pobierzKolor() == 'B') {

@@ -7,10 +7,17 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
+/**
+ * Klasa odpowiedzialna za przeprowadzania rozgrywki
+ */
 public class Gra {
     private Gracz obecnyGracz;
     private Plansza plansza;
     private final ZarzadcaBudowniczych zarzadcaBudowniczych = new ZarzadcaBudowniczych();
+
+    /**
+     * Klasa wewnętrzna dla każdego z graczy
+     */
     class Gracz implements Runnable {
         private final char kolor;
         private volatile Gracz przeciwnik;
@@ -18,6 +25,11 @@ public class Gra {
         private Scanner odGracza;
         private PrintWriter doGracza;
 
+        /**
+         * Główny konstruktor dla Gracza
+         * @param gniazdo gniazdo, z którym połączony jest gracz
+         * @param kolor kolor danego gracza. 'B' - Biały; 'C' - Czarny
+         */
         public Gracz(final Socket gniazdo, final char kolor) {
             this.gniazdo = gniazdo;
             this.kolor = kolor;

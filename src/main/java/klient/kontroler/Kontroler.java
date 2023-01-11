@@ -8,6 +8,9 @@ import klient.model.Plansza;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+/**
+ * Klasa pośrednicząca między modelem a widokiem, odpowiedzialna za komunikację z serwerem
+ */
 public class Kontroler implements Runnable {
 
     private final Scanner odSerwera;
@@ -15,9 +18,15 @@ public class Kontroler implements Runnable {
     private PlanszaGUI planszaGUI;
     private Plansza plansza;
     private boolean rozpoczetoGre = false;
+
+    /**
+     * Przypisuje planszę widokową
+     * @param planszaGUI Obiekt planszy do przypisania
+     */
     public void ustawPlanszeGUI(final PlanszaGUI planszaGUI) {
         this.planszaGUI = planszaGUI;
     }
+
     @Override
     public void run() {
         try {
@@ -122,12 +131,21 @@ public class Kontroler implements Runnable {
         }
     }
 
+    /**
+     * Przesyła komunikat do serwera
+     * @param komenda Komunikat do przekazania
+     */
     public void wyslijKomende(final String komenda) {
         if (rozpoczetoGre) {
             doSerwera.println(komenda);
         }
     }
 
+    /**
+     * Główny konstruktor
+     * @param odSerwera Obiekt typu Scanner odpowiadający za dane wejściowe
+     * @param doSerwera Obiekt typu PrintWriter odpowiadający za dane wyjściowe
+     */
     public Kontroler(final Scanner odSerwera, final PrintWriter doSerwera) {
         this.odSerwera = odSerwera;
         this.doSerwera = doSerwera;

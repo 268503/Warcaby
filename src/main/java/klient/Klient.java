@@ -12,14 +12,25 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
+/**
+ * Klasa aplikacji klienckiej
+ */
 public class Klient extends Application {
     private PrintWriter doSerwera;
     private Kontroler kontroler;
 
+    /**
+     * Wywołuje metodę do tworzenia GUI
+     * @param args argumenty z linii komend (nieużywane)
+     */
     public static void main(final String[] args) {
         launch();
     }
 
+    /**
+     * Łączy się z serwerem, ustawia środowisko graficzne
+     * @param scena Scena środowiska graficznego
+     */
     @Override
     public void start(final Stage scena) {
         String adresSerwera;

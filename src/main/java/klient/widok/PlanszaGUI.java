@@ -7,19 +7,35 @@ import javafx.scene.layout.GridPane;
 import klient.kontroler.Kontroler;
 import klient.model.Plansza;
 
+/**
+ * Klasa dla planszy widokowej
+ */
 public class PlanszaGUI extends GridPane {
     private char kolor;
     private final Kontroler kontroler;
     private int statusRuchu = 0;
     private int xPocz, yPocz;
+
+    /**
+     * Główny konstruktor
+     * @param kontroler kontroler odpowiedzialny za komunikację z planszą modelową
+     */
     public PlanszaGUI(final Kontroler kontroler) {
         this.kontroler = kontroler;
     }
 
+    /**
+     * Przypisuje kolor do pola
+     * @param kolor kolor gracza, dla którego jest tworzona plansza
+     */
     public void ustawKolor(final char kolor) {
         this.kolor = kolor;
     }
 
+    /**
+     * Aktualizuje widok planszy
+     * @param plansza plansza modelowa, na podstawie której przeprowadzana jest aktualizacja
+     */
     public void odswiez(final Plansza plansza) {
         getChildren().clear();
 

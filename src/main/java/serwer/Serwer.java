@@ -4,7 +4,14 @@ import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Klasa serwera, na którym przeprowadzana jest rozgrywka
+ */
 public class Serwer {
+    /**
+     * Główna metoda serwera, która uruchamia grę
+     * @param args argumenty z linii komend (nieużywane)
+     */
     public static void main(final String[] args) throws Exception {
         try (ServerSocket nasluchiwacz = new ServerSocket(44444)) {
             System.out.println("Serwer do warcabów działa");

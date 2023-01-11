@@ -2,6 +2,9 @@ package serwer.model;
 
 import java.util.ArrayList;
 
+/**
+ * Konkretny budowniczy dla wariantu polskiego warcabów
+ */
 public class PlanszaWariantPolskiBudowniczy extends PlanszaBudowniczy {
     private static final int WYMIAR_PLANSZY = 10;
     @Override
@@ -171,26 +174,28 @@ public class PlanszaWariantPolskiBudowniczy extends PlanszaBudowniczy {
         }
     }
 
-public int znajdzNajlepszeBicie(final Plansza plansza, final char kolor) {
-    final Plansza kopia = new Plansza();
-    kopia.ustawWymiar(WYMIAR_PLANSZY);
-    kopia.ustawPionki(plansza.pobierzPionki());
-    int maksymalnaDlugoscBicia = 0;
-    int dlugosc;
-    for (int i = 0; i < WYMIAR_PLANSZY; i++) {
-        for (int j = 0; j < WYMIAR_PLANSZY; j++) {
-            final Pionek pionek = kopia.pobierzPionek(i, j);
-            if (pionek != null && pionek.pobierzKolor() == kolor) {
-                dlugosc = rekurencyjneSzukanieBicia(pionek, kopia, 0);
-                if (dlugosc > maksymalnaDlugoscBicia) {
-                    maksymalnaDlugoscBicia = dlugosc;
+    @Override
+    public int znajdzNajlepszeBicie(final Plansza plansza, final char kolor) {
+        final Plansza kopia = new Plansza();
+        kopia.ustawWymiar(WYMIAR_PLANSZY);
+        kopia.ustawPionki(plansza.pobierzPionki());
+        int maksymalnaDlugoscBicia = 0;
+        int dlugosc;
+        for (int i = 0; i < WYMIAR_PLANSZY; i++) {
+            for (int j = 0; j < WYMIAR_PLANSZY; j++) {
+                final Pionek pionek = kopia.pobierzPionek(i, j);
+                if (pionek != null && pionek.pobierzKolor() == kolor) {
+                    dlugosc = rekurencyjneSzukanieBicia(pionek, kopia, 0);
+                    if (dlugosc > maksymalnaDlugoscBicia) {
+                        maksymalnaDlugoscBicia = dlugosc;
+                    }
                 }
             }
         }
+        return maksymalnaDlugoscBicia;
     }
-    return maksymalnaDlugoscBicia;
-}
 
+    @Override
     public int rekurencyjneSzukanieBicia(final Pionek pionek, final Plansza plansza, final int glebokosc) {
         int maksymalnaGlebokosc = glebokosc;
         int nowaGlebokosc;
@@ -295,6 +300,7 @@ public int znajdzNajlepszeBicie(final Plansza plansza, final char kolor) {
         return maksymalnaGlebokosc;
     }
 
+    @Override
     public int glebokoscPoBiciu(final char kolorPionka, final int xPocz, final int yPocz, final int xKonc, final int yKonc) {
         if (!moznaDalejBic(kolorPionka, xPocz, yPocz)) {
             return 0;
@@ -320,6 +326,7 @@ public int znajdzNajlepszeBicie(final Plansza plansza, final char kolor) {
         return rekurencyjneSzukanieBicia(nowyPionek, kopia, 1);
     }
 
+    @Override
     public int glebokoscBiciaDamka(final Plansza plansza, final Pionek pionek, final int xKonc, final int yKonc, final int glebokosc) {
         final int xPocz = pionek.pobierzWspolrzednaX();
         final int yPocz = pionek.pobierzWspolrzednaY();
