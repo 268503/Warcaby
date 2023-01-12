@@ -51,10 +51,12 @@ public class Klient extends Application {
         wprowadzanieIpDialog.showAndWait();
         adresSerwera = wprowadzanieIpDialog.getEditor().getText();
         try {
-            final Socket gniazdo = new Socket(adresSerwera, 44444);
+            final Socket gniazdo = new Socket(adresSerwera, 55555);
             final Scanner odSerwera = new Scanner(gniazdo.getInputStream());
             doSerwera = new PrintWriter(gniazdo.getOutputStream(), true);
-            kontroler = new Kontroler(odSerwera, doSerwera);
+            kontroler = Kontroler.pobierzInstancje();
+            kontroler.ustawDaneWejsciowe(odSerwera);
+            kontroler.ustawDaneWyjsciowe(doSerwera);
         } catch (Exception e) {
             System.out.println("Nie udało się połączyć z serwerem");
         }

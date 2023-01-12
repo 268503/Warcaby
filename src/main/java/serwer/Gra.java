@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.util.Scanner;
 
 /**
- * Klasa odpowiedzialna za przeprowadzania rozgrywki
+ * Klasa odpowiedzialna za przeprowadzanie rozgrywki
  */
 public class Gra {
     private Gracz obecnyGracz;
@@ -18,7 +18,7 @@ public class Gra {
     /**
      * Klasa wewnętrzna dla każdego z graczy
      */
-    class Gracz implements Runnable {
+    public class Gracz implements Runnable {
         private final char kolor;
         private volatile Gracz przeciwnik;
         private final Socket gniazdo;
@@ -77,13 +77,13 @@ public class Gra {
                                 przeciwnik.doGracza.println("PROMOCJA " + xKonc + " " + yKonc);
                             }
                             if (zarzadcaBudowniczych.czyWygrana(kolor)) {
-                                doGracza.println("WYGRANA " + kolor);
-                                przeciwnik.doGracza.println("WYGRANA " + kolor);
+                                doGracza.println("INFO Wygrywa " + kolor);
+                                przeciwnik.doGracza.println("INFO Wygrywa " + kolor);
                                 obecnyGracz = null;
                             }
                             else if (zarzadcaBudowniczych.czyRemis()){
-                                doGracza.println("REMIS");
-                                przeciwnik.doGracza.println("REMIS");
+                                doGracza.println("INFO Remis");
+                                przeciwnik.doGracza.println("INFO Remis");
                                 obecnyGracz = null;
                             }
                             else {
@@ -99,13 +99,13 @@ public class Gra {
                                     przeciwnik.doGracza.println("PROMOCJA " + xKonc + " " + yKonc);
                                 }
                                 if (zarzadcaBudowniczych.czyWygrana(kolor)) {
-                                    doGracza.println("WYGRANA " + kolor);
-                                    przeciwnik.doGracza.println("WYGRANA " + kolor);
+                                    doGracza.println("INFO Wygrywa " + kolor);
+                                    przeciwnik.doGracza.println("INFO Wygrywa " + kolor);
                                     obecnyGracz = null;
                                 }
                                 else if (zarzadcaBudowniczych.czyRemis()){
-                                    doGracza.println("REMIS");
-                                    przeciwnik.doGracza.println("REMIS");
+                                    doGracza.println("INFO Remis");
+                                    przeciwnik.doGracza.println("INFO Remis");
                                     obecnyGracz = null;
                                 }
                                 else {

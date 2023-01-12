@@ -1,4 +1,4 @@
-module klient {
+module warcaby {
     requires javafx.controls;
     exports klient;
 }

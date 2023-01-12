@@ -23,7 +23,7 @@ public class ZarzadcaBudowniczych {
 
     /**
      * Wywołuje metodę budowniczego konkretnego do zbijania pionka
-     * @see serwer.model.PlanszaBudowniczy#zbijPionek(char, int, int, int, int)
+     * @see PlanszaBudowniczy#zbijPionek(char, int, int, int, int)
      * @param kolorPionka kolor pionka, który wykonuje bicie
      * @param xPocz początkowa współrzędna x
      * @param yPocz początkowa współrzędna y
@@ -37,7 +37,7 @@ public class ZarzadcaBudowniczych {
 
     /**
      * Wywołuje metodę budowniczego konkretnego do normalnego ruchu pionkiem
-     * @see serwer.model.PlanszaBudowniczy#normalnyRuch(char, int, int, int, int)
+     * @see PlanszaBudowniczy#normalnyRuch(char, int, int, int, int)
      * @param kolorPionka kolor ruszanego pionka
      * @param xPocz początkowa współrzędna x
      * @param yPocz początkowa współrzędna y
@@ -51,7 +51,7 @@ public class ZarzadcaBudowniczych {
 
     /**
      * Wywołuje metodę budowniczego konkretnego do sprawdzania czy można dalej bić
-     * @see serwer.model.PlanszaBudowniczy#moznaDalejBic(char, int, int)
+     * @see PlanszaBudowniczy#moznaDalejBic(char, int, int)
      * @param kolorPionka kolor pionka, dla którego jest sprawdzana dostępność bicia
      * @param x współrzędna x pionka
      * @param y współrzędna y pionka

@@ -70,7 +70,7 @@ public abstract class PlanszaBudowniczy {
     abstract public boolean moznaNormalnyRuch(char kolorPionka, int xPocz, int yPocz, int xKonc, int yKonc);
 
     /**
-     * Sprawdza czy dla pionka o podanych współrzędny jest dostępne bicie
+     * Sprawdza czy dla pionka o podanych współrzędnych jest dostępne bicie
      * @param kolorPionka kolor pionka, dla którego jest sprawdzana dostępność bicia
      * @param x współrzędna x pionka
      * @param y współrzędna y pionka
@@ -79,7 +79,7 @@ public abstract class PlanszaBudowniczy {
     abstract public boolean moznaDalejBic(char kolorPionka, int x, int y);
 
     /**
-     * Sprawdza jaką długość ma najlepsze bicie gracza naego koloru
+     * Sprawdza jaką długość ma najlepsze bicie gracza danego koloru
      * @param plansza plansza, na której toczy się rozgrywka
      * @param kolor kolor gracza, dla którego szukamy najlepszego bicia
      * @return długość najlepszego bicia
@@ -87,7 +87,7 @@ public abstract class PlanszaBudowniczy {
     abstract public int znajdzNajlepszeBicie(final Plansza plansza, final char kolor);
 
     /**
-     * Rekurencyjnie wyznacza maksymalną długośc bicia danym pionkiem dla danego stanu planszy
+     * Rekurencyjnie wyznacza maksymalną długość bicia danym pionkiem dla danego stanu planszy
      * @param pionek pionek, który jest w trakcie bicia
      * @param plansza stan planszy, dla którego znajdujemy długość bicia danym pionkiem
      * @param glebokosc obecna długośc bicia
@@ -114,11 +114,21 @@ public abstract class PlanszaBudowniczy {
      * @param pionek damka, dla której znajdowana jest długość bicia
      * @param xKonc końcowa współrzędna x
      * @param yKonc końcowa współrzędna y
-     * @param glebokosc obecna długośc bicia
+     * @param glebokosc obecna długość bicia
      * @return maksymalna długość dalszego bicia dla danego stanu planszy
      */
     abstract public int glebokoscBiciaDamka(final Plansza plansza, final Pionek pionek, final int xKonc, final int yKonc, final int glebokosc);
 
+    /**
+     * Dla bicia pionkiem na współrzędne końcowe sprawdza maksymalną długość dalszego bicia dla danego stanu planszy
+     * @param pionek pionek, dla którego znajdowana jest długość bicia
+     * @param plansza stan planszy, dla którego znajdowana jest długość bicia pionkiem
+     * @param xKonc końcowa współrzędna x
+     * @param yKonc końcowa współrzędna y
+     * @param glebokosc obecna długość bicia
+     * @return maksymalna długość dalszego bicia dla danego stanu planszy
+     */
+    abstract public int glebokoscBiciaPionkiem(final Pionek pionek, final Plansza plansza, final int xKonc, final int yKonc, final int glebokosc);
 
     /**
      * Sprawdza czy jest dostępne bicie dowolnym pionkiem danego koloru na planszy

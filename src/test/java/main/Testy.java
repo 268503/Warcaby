@@ -9,9 +9,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class Testy {
-    /**
-     *
-     */
     @Test
     public void testNormalnegoRuchuPionkaWariantKlasyczny() {
         final ZarzadcaBudowniczych zarzadcaBudowniczych = new ZarzadcaBudowniczych();
@@ -324,4 +321,26 @@ public class Testy {
 
     }
 
+    @Test
+    public void testWygranaPrzezBrakMozliwosciRuchu() {
+        final ZarzadcaBudowniczych zarzadcaBudowniczych = new ZarzadcaBudowniczych();
+        final PlanszaBudowniczy planszaBudowniczy = new PlanszaWariantPolskiBudowniczy();
+        zarzadcaBudowniczych.ustawPlanszaBudowniczy(planszaBudowniczy);
+        zarzadcaBudowniczych.skonstruujPlansze();
+        final Plansza plansza = zarzadcaBudowniczych.pobierzPlansza();
+
+        plansza.ustawPionki(new ArrayList<>());
+        plansza.wstawPionek(new Pionek('B', 1, 6));
+        plansza.wstawPionek(new Pionek('C', 1, 4));
+        plansza.wstawPionek(new Pionek('C', 2, 3));
+        plansza.wstawPionek(new Pionek('C', 7, 2));
+        assertFalse(zarzadcaBudowniczych.czyWygrana('C'));
+        assertFalse(zarzadcaBudowniczych.czyRemis());
+        zarzadcaBudowniczych.normalnyRuch('B', 1, 6, 0, 5);
+        assertFalse(zarzadcaBudowniczych.czyWygrana('B'));
+        assertFalse(zarzadcaBudowniczych.czyRemis());
+        zarzadcaBudowniczych.normalnyRuch('C', 7, 2, 8, 3);
+        assertTrue(zarzadcaBudowniczych.czyWygrana('C'));
+        assertFalse(zarzadcaBudowniczych.czyRemis());
+    }
 }

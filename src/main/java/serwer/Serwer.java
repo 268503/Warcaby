@@ -13,7 +13,7 @@ public class Serwer {
      * @param args argumenty z linii komend (nieużywane)
      */
     public static void main(final String[] args) throws Exception {
-        try (ServerSocket nasluchiwacz = new ServerSocket(44444)) {
+        try (ServerSocket nasluchiwacz = new ServerSocket(55555)) {
             System.out.println("Serwer do warcabów działa");
             final ExecutorService pula = Executors.newFixedThreadPool(2);
             final Gra gra = new Gra();

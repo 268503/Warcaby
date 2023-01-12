@@ -13,8 +13,9 @@ import java.util.Scanner;
  */
 public class Kontroler implements Runnable {
 
-    private final Scanner odSerwera;
-    private final PrintWriter doSerwera;
+    private static final Kontroler instancja = new Kontroler();
+    private Scanner odSerwera;
+    private PrintWriter doSerwera;
     private PlanszaGUI planszaGUI;
     private Plansza plansza;
     private boolean rozpoczetoGre = false;
@@ -141,13 +142,29 @@ public class Kontroler implements Runnable {
         }
     }
 
+    private Kontroler() {}
+
     /**
-     * Główny konstruktor
-     * @param odSerwera Obiekt typu Scanner odpowiadający za dane wejściowe
-     * @param doSerwera Obiekt typu PrintWriter odpowiadający za dane wyjściowe
+     * Pobiera instancję kontrolera, będącego singletonem
+     * @return instancja kontrolera
      */
-    public Kontroler(final Scanner odSerwera, final PrintWriter doSerwera) {
+    public static Kontroler pobierzInstancje() {
+        return instancja;
+    }
+
+    /**
+     * Ustawia obiekt odpowiadający za dane wejściowe
+     * @param odSerwera obiekt odpowiadający za dane wejściowe
+     */
+    public void ustawDaneWejsciowe (final Scanner odSerwera) {
         this.odSerwera = odSerwera;
+    }
+
+    /**
+     * Ustawia obiekt odpowiadający za dane wyjściowe
+     * @param doSerwera obiekt odpowiadający za dane wyjściowe
+     */
+    public void ustawDaneWyjsciowe (final PrintWriter doSerwera) {
         this.doSerwera = doSerwera;
     }
 }
