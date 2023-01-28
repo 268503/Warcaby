@@ -40,6 +40,16 @@ public class Kontroler implements Runnable {
                 if (odpowiedz.startsWith("INFO")) {
                     System.out.println(odpowiedz.substring(5));
                 }
+                else if (odpowiedz.startsWith("CZY_BOT")) {
+                    Platform.runLater(() -> {
+                        final TextInputDialog wprowadzanieWariantDialog = new TextInputDialog();
+                        wprowadzanieWariantDialog.setTitle("Wariant");
+                        wprowadzanieWariantDialog.setGraphic(null);
+                        wprowadzanieWariantDialog.setHeaderText("Czy grac z botem (1 tak 0 nie)");
+                        wprowadzanieWariantDialog.showAndWait();
+                        final String wybor = wprowadzanieWariantDialog.getEditor().getText();
+                        doSerwera.println("BOT " + wybor);});
+                }
                 else if (odpowiedz.startsWith("PODAJ_WARIANT")) {
                     Platform.runLater(() -> {
                         final TextInputDialog wprowadzanieWariantDialog = new TextInputDialog();
@@ -140,6 +150,7 @@ public class Kontroler implements Runnable {
         if (rozpoczetoGre) {
             doSerwera.println(komenda);
         }
+        // System.out.println("wysylam " + komenda);
     }
 
     private Kontroler() {}

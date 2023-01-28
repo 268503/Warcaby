@@ -17,8 +17,8 @@ public class Serwer {
             System.out.println("Serwer do warcabów działa");
             final ExecutorService pula = Executors.newFixedThreadPool(2);
             final Gra gra = new Gra();
-            pula.execute(gra.new Gracz(nasluchiwacz.accept(), 'B'));
-            pula.execute(gra.new Gracz(nasluchiwacz.accept(), 'C'));
+            pula.execute(gra.new Czlowiek(nasluchiwacz.accept(), 'B'));
+            pula.execute(gra.new Czlowiek(nasluchiwacz.accept(), 'C'));
         }
     }
 
