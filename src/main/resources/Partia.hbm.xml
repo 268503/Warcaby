@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="serwer.dto">
+    <class name="Partia" table="Partia">
+        <id name="id" column="id" type="int">
+            <generator class="native"/>
+        </id>
+        <many-to-one name="wariant" class="Wariant"
+                     column="id_wariantu" not-null="true"/>
+
+        <set name="ruchy" inverse="true" cascade="all">
+            <key column="id_partii" not-null="true" />
+            <one-to-many class="Ruch"/>
+        </set>
+    </class>
+</hibernate-mapping>

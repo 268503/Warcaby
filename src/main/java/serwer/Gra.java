@@ -1,5 +1,6 @@
 package serwer;
 
+import serwer.dto.Ruch;
 import serwer.model.*;
 
 import java.io.*;
@@ -16,6 +17,7 @@ public class Gra {
     private Gracz obecnyGracz;
     private Plansza plansza;
     private final ZarzadcaBudowniczych zarzadcaBudowniczych = new ZarzadcaBudowniczych();
+    private final ZarzadcaBazyDanych zarzadcaBazyDanych = new ZarzadcaBazyDanych();
 
     boolean graZBotem = false;
     public static class Gracz {
@@ -29,11 +31,7 @@ public class Gra {
      * Klasa wewnętrzna dla każdego z graczy
      */
     public class Czlowiek extends Gracz implements Runnable {
-//        private final char kolor;
-//        private volatile Gracz przeciwnik;
         private final Socket gniazdo;
-//        private Scanner odGracza;
-//        private PrintWriter doGracza;
 
         /**
          * Główny konstruktor dla Gracza
@@ -51,7 +49,7 @@ public class Gra {
             doGracza.println("Witaj, " + kolor);
             if (kolor == 'B') {
                 obecnyGracz = this;
-                doGracza.println("CZY_BOT");
+                doGracza.println("PODAJ_TYP_GRY");
             } else {
                 przeciwnik = obecnyGracz;
                 przeciwnik.przeciwnik = this;
@@ -68,47 +66,46 @@ public class Gra {
                     return;
                 }
                 else if (komenda.startsWith("RUCH")) {
-//                    System.out.println("siema");
                     final String[] wspolrzedne = komenda.split(" ");
                     final int xPocz = Integer.parseInt(wspolrzedne[1]);
                     final int yPocz = Integer.parseInt(wspolrzedne[2]);
                     final int xKonc = Integer.parseInt(wspolrzedne[3]);
                     final int yKonc = Integer.parseInt(wspolrzedne[4]);
-//                    System.out.println(obecnyGracz.kolor + " " + kolor);
-//                    if (obecnyGracz.kolor == kolor) {
-//                        System.out.println("gita");
-//                    }
-//                    if (plansza.ruszPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
-//                        System.out.println("gitb");
-//                    }
                     if (obecnyGracz.kolor == kolor && plansza.ruszPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
-//                        System.out.println("dzien nody");
                         if (zarzadcaBudowniczych.istniejeBicie(obecnyGracz.kolor)) {
                             doGracza.println("INFO Masz bicie");
                         }
                         if (zarzadcaBudowniczych.normalnyRuch(kolor, xPocz, yPocz, xKonc, yKonc)) {
+                            boolean promocja = false;
                             przeciwnik.doGracza.println("NORMALNY_RUCH_PRZECIWNIKA " + komenda.substring(5));
                             doGracza.println("POPRAWNY_NORMALNY_RUCH " + komenda.substring(5));
                             if ((kolor == 'B' && yKonc == 0) || (kolor == 'C' && yKonc == plansza.pobierzWymiar() - 1)) {
                                 plansza.pobierzPionek(xKonc, yKonc).ustawDamka();
                                 doGracza.println("PROMOCJA " + xKonc + " " + yKonc);
                                 przeciwnik.doGracza.println("PROMOCJA " + xKonc + " " + yKonc);
+                                promocja = true;
                             }
                             if (zarzadcaBudowniczych.czyWygrana(kolor)) {
+                                zarzadcaBazyDanych.dodajRuch(xPocz, yPocz, xKonc, yKonc, 0, promocja);
+                                zarzadcaBazyDanych.stop();
                                 doGracza.println("INFO Wygrywa " + kolor);
                                 przeciwnik.doGracza.println("INFO Wygrywa " + kolor);
                                 obecnyGracz = null;
                             }
                             else if (zarzadcaBudowniczych.czyRemis()){
+                                zarzadcaBazyDanych.dodajRuch(xPocz, yPocz, xKonc, yKonc, 0, promocja);
+                                zarzadcaBazyDanych.stop();
                                 doGracza.println("INFO Remis");
                                 przeciwnik.doGracza.println("INFO Remis");
                                 obecnyGracz = null;
                             }
                             else {
+                                zarzadcaBazyDanych.dodajRuch(xPocz, yPocz, xKonc, yKonc, 0, promocja);
                                 obecnyGracz = przeciwnik;
                                 przeciwnik.wykonajRuch();
                             }
                         } else if (zarzadcaBudowniczych.zbijPionek(kolor, xPocz, yPocz, xKonc, yKonc)) {
+                            boolean promocja = false;
                             przeciwnik.doGracza.println("BICIE_RUCH_PRZECIWNIKA " + komenda.substring(5));
                             doGracza.println("POPRAWNY_BICIE_RUCH " + komenda.substring(5));
                             if (!zarzadcaBudowniczych.moznaDalejBic(kolor, xKonc, yKonc)) {
@@ -116,23 +113,30 @@ public class Gra {
                                     plansza.pobierzPionek(xKonc, yKonc).ustawDamka();
                                     doGracza.println("PROMOCJA " + xKonc + " " + yKonc);
                                     przeciwnik.doGracza.println("PROMOCJA " + xKonc + " " + yKonc);
+                                    promocja = true;
                                 }
                                 if (zarzadcaBudowniczych.czyWygrana(kolor)) {
+                                    zarzadcaBazyDanych.dodajRuch(xPocz, yPocz, xKonc, yKonc, 1, promocja);
+                                    zarzadcaBazyDanych.stop();
                                     doGracza.println("INFO Wygrywa " + kolor);
                                     przeciwnik.doGracza.println("INFO Wygrywa " + kolor);
                                     obecnyGracz = null;
                                 }
                                 else if (zarzadcaBudowniczych.czyRemis()){
+                                    zarzadcaBazyDanych.dodajRuch(xPocz, yPocz, xKonc, yKonc, 1, promocja);
+                                    zarzadcaBazyDanych.stop();
                                     doGracza.println("INFO Remis");
                                     przeciwnik.doGracza.println("INFO Remis");
                                     obecnyGracz = null;
                                 }
                                 else {
+                                    zarzadcaBazyDanych.dodajRuch(xPocz, yPocz, xKonc, yKonc, 1, promocja);
                                     obecnyGracz = przeciwnik;
                                     przeciwnik.wykonajRuch();
                                 }
                             }
                             else {
+                                zarzadcaBazyDanych.dodajRuch(xPocz, yPocz, xKonc, yKonc, 1, promocja);
                                 doGracza.println("INFO Kontynuuj bicie");
                             }
                         }
@@ -148,6 +152,7 @@ public class Gra {
                     }
                     PlanszaBudowniczy planszaBudowniczy = null;
                     if (wariant == '1') {
+                        zarzadcaBazyDanych.stworzPartie(1);
                         planszaBudowniczy = new PlanszaWariantKlasycznyBudowniczy();
                         doGracza.println("STWÓRZ_PLANSZĘ " + wariant);
                         while (przeciwnik == null && !graZBotem) {
@@ -159,9 +164,12 @@ public class Gra {
                             obecnyGracz = this;
                             doGracza.println("START");
                         }
+                        doGracza.println("INFO Twoja partia ma ID " + zarzadcaBazyDanych.pobierzIdPartii());
+                        przeciwnik.doGracza.println("INFO Twoja partia ma ID " + zarzadcaBazyDanych.pobierzIdPartii());
                         przeciwnik.doGracza.println("STWÓRZ_PLANSZĘ " + wariant);
                     }
                     else if (wariant == '2') {
+                        zarzadcaBazyDanych.stworzPartie(2);
                         planszaBudowniczy = new PlanszaWariantHiszpanskiBudowniczy();
                         doGracza.println("STWÓRZ_PLANSZĘ " + wariant);
                         while (przeciwnik == null && !graZBotem) {
@@ -173,9 +181,12 @@ public class Gra {
                             obecnyGracz = this;
                             doGracza.println("START");
                         }
+                        doGracza.println("INFO Twoja partia ma ID " + zarzadcaBazyDanych.pobierzIdPartii());
+                        przeciwnik.doGracza.println("INFO Twoja partia ma ID " + zarzadcaBazyDanych.pobierzIdPartii());
                         przeciwnik.doGracza.println("STWÓRZ_PLANSZĘ " + wariant);
                     }
                     else if (wariant == '3') {
+                        zarzadcaBazyDanych.stworzPartie(3);
                         planszaBudowniczy = new PlanszaWariantPolskiBudowniczy();
                         doGracza.println("STWÓRZ_PLANSZĘ " + wariant);
                         while (przeciwnik == null && !graZBotem) {
@@ -187,6 +198,8 @@ public class Gra {
                             obecnyGracz = this;
                             doGracza.println("START");
                         }
+                        doGracza.println("INFO Twoja partia ma ID " + zarzadcaBazyDanych.pobierzIdPartii());
+                        przeciwnik.doGracza.println("INFO Twoja partia ma ID " + zarzadcaBazyDanych.pobierzIdPartii());
                         przeciwnik.doGracza.println("STWÓRZ_PLANSZĘ " + wariant);
                     }
                     else {
@@ -198,17 +211,44 @@ public class Gra {
                         plansza = zarzadcaBudowniczych.pobierzPlansza();
                     }
                 }
-                else if (komenda.startsWith("BOT")) {
+                else if (komenda.startsWith("TYP")) {
                     char wybor = komenda.charAt(4);
-                    if (wybor == '1')
-                    {
-                        graZBotem = true;
+                    if (wybor == '0') {
+                        doGracza.println("PODAJ_WARIANT");
                     }
-                    doGracza.println("PODAJ_WARIANT");
+                    if (wybor == '1') {
+                        graZBotem = true;
+                        doGracza.println("PODAJ_WARIANT");
+                    }
+                    else if (wybor == '2') {
+                        doGracza.println("PODAJ_ID_PARTII");
+                    }
+                }
+                else if (komenda.startsWith("ID_PARTII ")) {
+                    odtworzPartie(Integer.parseInt(komenda.substring(10)));
                 }
             }
         }
 
+        private void odtworzPartie(int id_partii) {
+            doGracza.println("STWÓRZ_PLANSZĘ " + zarzadcaBazyDanych.pobierzWariantPartii(id_partii));
+            List<Ruch> ruchy = zarzadcaBazyDanych.pobierzRuchy(id_partii);
+            for (Ruch ruch : ruchy) {
+                try {
+                    Thread.sleep(500);
+                } catch (Exception e) {}
+                if (ruch.getTypRuchu() == 1) {
+                    doGracza.println("POPRAWNY_BICIE_RUCH " + ruch.getxPocz() + " " + ruch.getyPocz() + " " +  ruch.getxKonc() + " " + ruch.getyKonc());
+                }
+                else
+                {
+                    doGracza.println("POPRAWNY_NORMALNY_RUCH " + ruch.getxPocz() + " " + ruch.getyPocz() + " " +  ruch.getxKonc() + " " + ruch.getyKonc());
+                }
+                if (ruch.isPromocja()) {
+                    doGracza.println("PROMOCJA " + ruch.getxKonc() + " " + ruch.getyKonc());
+                }
+            }
+        }
 
 
         @Override
@@ -270,18 +310,14 @@ public class Gra {
 
             if (planszaBudowniczy.istniejeBicie(kolor)) {
                 int wymaganaDlugoscBicia = planszaBudowniczy.znajdzNajlepszeBicie(plansza, kolor);
-//                System.out.println("potrzeba bic " + wymaganaDlugoscBicia);
-//                System.out.println("ISTNIEJE BICIE wybrano pionek x: " + pionekDoRuszenia.pobierzWspolrzednaX() + " y: " + pionekDoRuszenia.pobierzWspolrzednaY());
                 while (planszaBudowniczy.rekurencyjneSzukanieBicia(pionekDoRuszenia, plansza, 0) != wymaganaDlugoscBicia) {
                     numerPionka = los.nextInt(pionki.size());
                     pionekDoRuszenia = pionki.get(numerPionka);
-//                    System.out.println("wybrano pionek x: " + pionekDoRuszenia.pobierzWspolrzednaX() + " y: " + pionekDoRuszenia.pobierzWspolrzednaY());
                 }
                 wspolrzednaX = pionekDoRuszenia.pobierzWspolrzednaX();
                 wspolrzednaY = pionekDoRuszenia.pobierzWspolrzednaY();
                 while (!wykonanoRuch) {
                     kierunek = los.nextInt(4);
-//                    System.out.println("losuje kierunek");
                     switch (kierunek) {
                         case 0:         // ++
                             if (pionekDoRuszenia.czyDamka()) {
@@ -291,19 +327,29 @@ public class Gra {
                                     if (plansza.ruszPionek(kolor, wspolrzednaX, wspolrzednaY, wspolrzednaX + odlegloscRuchu, wspolrzednaY + odlegloscRuchu)
                                             && (planszaBudowniczy.glebokoscPoBiciu(kolor, wspolrzednaX, wspolrzednaY, wspolrzednaX + odlegloscRuchu, wspolrzednaY + odlegloscRuchu) == wymaganaDlugoscBicia)
                                             && zarzadcaBudowniczych.zbijPionek(kolor, wspolrzednaX, wspolrzednaY, wspolrzednaX + odlegloscRuchu, wspolrzednaY + odlegloscRuchu)) {
+
                                         przeciwnik.doGracza.println("BICIE_RUCH_PRZECIWNIKA " + wspolrzednaX + " " + wspolrzednaY + " " + (wspolrzednaX + odlegloscRuchu) + " " + (wspolrzednaY + odlegloscRuchu));
                                         wymaganaDlugoscBicia--;
                                         wspolrzednaX = wspolrzednaX + odlegloscRuchu;
                                         wspolrzednaY = wspolrzednaY + odlegloscRuchu;
+
                                         try {
                                             Thread.sleep(CZAS_MIEDZY_RUCHAMI);
                                         }
                                         catch (Exception e) {
 
                                         }
+                                        boolean promocja = false;
                                         if (wymaganaDlugoscBicia == 0) {
                                             wykonanoRuch = true;
+                                            if (wspolrzednaY == (kolor == 'C' ? plansza.pobierzWymiar() - 1 : 0)) {
+                                                plansza.pobierzPionek(wspolrzednaX, wspolrzednaY).ustawDamka();
+                                                przeciwnik.doGracza.println("PROMOCJA " + wspolrzednaX + " " + wspolrzednaY);
+                                                promocja = true;
+                                            }
                                         }
+                                        zarzadcaBazyDanych.dodajRuch(wspolrzednaX - odlegloscRuchu, wspolrzednaY - odlegloscRuchu, wspolrzednaX, wspolrzednaY, 1, promocja);
+
                                     }
                                 }
                             }
@@ -321,9 +367,17 @@ public class Gra {
                                     catch (Exception e) {
 
                                     }
+                                    boolean promocja = false;
                                     if (wymaganaDlugoscBicia == 0) {
                                         wykonanoRuch = true;
+                                        if (wspolrzednaY == (kolor == 'C' ? plansza.pobierzWymiar() - 1 : 0)) {
+                                            plansza.pobierzPionek(wspolrzednaX, wspolrzednaY).ustawDamka();
+                                            przeciwnik.doGracza.println("PROMOCJA " + wspolrzednaX + " " + wspolrzednaY);
+                                            promocja = true;
+                                        }
                                     }
+                                    zarzadcaBazyDanych.dodajRuch(wspolrzednaX - 2, wspolrzednaY - 2, wspolrzednaX, wspolrzednaY, 1, promocja);
+
                                 }
                             }
                             break;
@@ -345,9 +399,17 @@ public class Gra {
                                         catch (Exception e) {
 
                                         }
+                                        boolean promocja = false;
                                         if (wymaganaDlugoscBicia == 0) {
                                             wykonanoRuch = true;
+                                            if (wspolrzednaY == (kolor == 'C' ? plansza.pobierzWymiar() - 1 : 0)) {
+                                                plansza.pobierzPionek(wspolrzednaX, wspolrzednaY).ustawDamka();
+                                                przeciwnik.doGracza.println("PROMOCJA " + wspolrzednaX + " " + wspolrzednaY);
+                                                promocja = true;
+                                            }
                                         }
+                                        zarzadcaBazyDanych.dodajRuch(wspolrzednaX - odlegloscRuchu, wspolrzednaY + odlegloscRuchu, wspolrzednaX, wspolrzednaY, 1, promocja);
+
                                     }
                                 }
                             }
@@ -365,9 +427,17 @@ public class Gra {
                                     catch (Exception e) {
 
                                     }
+                                    boolean promocja = false;
                                     if (wymaganaDlugoscBicia == 0) {
                                         wykonanoRuch = true;
+                                        if (wspolrzednaY == (kolor == 'C' ? plansza.pobierzWymiar() - 1 : 0)) {
+                                            plansza.pobierzPionek(wspolrzednaX, wspolrzednaY).ustawDamka();
+                                            przeciwnik.doGracza.println("PROMOCJA " + wspolrzednaX + " " + wspolrzednaY);
+                                            promocja = true;
+                                        }
                                     }
+                                    zarzadcaBazyDanych.dodajRuch(wspolrzednaX - 2, wspolrzednaY + 2, wspolrzednaX, wspolrzednaY, 1, promocja);
+
                                 }
                             }
                             break;
@@ -389,9 +459,17 @@ public class Gra {
                                         catch (Exception e) {
 
                                         }
+                                        boolean promocja = false;
                                         if (wymaganaDlugoscBicia == 0) {
                                             wykonanoRuch = true;
+                                            if (wspolrzednaY == (kolor == 'C' ? plansza.pobierzWymiar() - 1 : 0)) {
+                                                plansza.pobierzPionek(wspolrzednaX, wspolrzednaY).ustawDamka();
+                                                przeciwnik.doGracza.println("PROMOCJA " + wspolrzednaX + " " + wspolrzednaY);
+                                                promocja = true;
+                                            }
                                         }
+                                        zarzadcaBazyDanych.dodajRuch(wspolrzednaX + odlegloscRuchu, wspolrzednaY - odlegloscRuchu, wspolrzednaX, wspolrzednaY, 1, promocja);
+
                                     }
                                 }
                             }
@@ -409,9 +487,17 @@ public class Gra {
                                     catch (Exception e) {
 
                                     }
+                                    boolean promocja = false;
                                     if (wymaganaDlugoscBicia == 0) {
                                         wykonanoRuch = true;
+                                        if (wspolrzednaY == (kolor == 'C' ? plansza.pobierzWymiar() - 1 : 0)) {
+                                            plansza.pobierzPionek(wspolrzednaX, wspolrzednaY).ustawDamka();
+                                            przeciwnik.doGracza.println("PROMOCJA " + wspolrzednaX + " " + wspolrzednaY);
+                                            promocja = true;
+                                        }
                                     }
+                                    zarzadcaBazyDanych.dodajRuch(wspolrzednaX + 2, wspolrzednaY - 2, wspolrzednaX, wspolrzednaY, 1, promocja);
+
                                 }
                             }
                             break;
@@ -433,9 +519,17 @@ public class Gra {
                                         catch (Exception e) {
 
                                         }
+                                        boolean promocja = false;
                                         if (wymaganaDlugoscBicia == 0) {
                                             wykonanoRuch = true;
+                                            if (wspolrzednaY == (kolor == 'C' ? plansza.pobierzWymiar() - 1 : 0)) {
+                                                plansza.pobierzPionek(wspolrzednaX, wspolrzednaY).ustawDamka();
+                                                przeciwnik.doGracza.println("PROMOCJA " + wspolrzednaX + " " + wspolrzednaY);
+                                                promocja = true;
+                                            }
                                         }
+                                        zarzadcaBazyDanych.dodajRuch(wspolrzednaX + odlegloscRuchu, wspolrzednaY + odlegloscRuchu, wspolrzednaX, wspolrzednaY, 1, promocja);
+
                                     }
                                 }
                             }
@@ -453,9 +547,17 @@ public class Gra {
                                     catch (Exception e) {
 
                                     }
+                                    boolean promocja = false;
                                     if (wymaganaDlugoscBicia == 0) {
                                         wykonanoRuch = true;
+                                        if (wspolrzednaY == (kolor == 'C' ? plansza.pobierzWymiar() - 1 : 0)) {
+                                            plansza.pobierzPionek(wspolrzednaX, wspolrzednaY).ustawDamka();
+                                            przeciwnik.doGracza.println("PROMOCJA " + wspolrzednaX + " " + wspolrzednaY);
+                                            promocja = true;
+                                        }
                                     }
+                                    zarzadcaBazyDanych.dodajRuch(wspolrzednaX + 2, wspolrzednaY + 2, wspolrzednaX, wspolrzednaY, 1, promocja);
+
                                 }
                             }
                             break;
@@ -467,10 +569,11 @@ public class Gra {
                 while (!planszaBudowniczy.czyMoznaRuszyc(pionekDoRuszenia)) {
                     numerPionka = los.nextInt(pionki.size());
                     pionekDoRuszenia = pionki.get(numerPionka);
-//                    System.out.println("wybrano pionek x: " + pionekDoRuszenia.pobierzWspolrzednaX() + " y: " + pionekDoRuszenia.pobierzWspolrzednaY());
                 }
                 wspolrzednaX = pionekDoRuszenia.pobierzWspolrzednaX();
                 wspolrzednaY = pionekDoRuszenia.pobierzWspolrzednaY();
+                int pierwotnyX = wspolrzednaX;
+                int pierwotnyY = wspolrzednaY;
                 while (!wykonanoRuch) {
                     kierunek = los.nextInt(4);
                     switch (kierunek) {
@@ -579,10 +682,14 @@ public class Gra {
                             break;
                     }
                 }
-            }
-            if (wspolrzednaY == (kolor == 'C' ? plansza.pobierzWymiar() - 1 : 0)) {
-                plansza.pobierzPionek(wspolrzednaX, wspolrzednaY).ustawDamka();
-                przeciwnik.doGracza.println("PROMOCJA " + wspolrzednaX + " " + wspolrzednaY);
+                boolean promocja = false;
+                if (wspolrzednaY == (kolor == 'C' ? plansza.pobierzWymiar() - 1 : 0)) {
+                    plansza.pobierzPionek(wspolrzednaX, wspolrzednaY).ustawDamka();
+                    przeciwnik.doGracza.println("PROMOCJA " + wspolrzednaX + " " + wspolrzednaY);
+                    promocja = true;
+                }
+                zarzadcaBazyDanych.dodajRuch(pierwotnyX, pierwotnyY, wspolrzednaX, wspolrzednaY, 0, promocja);
+
             }
         }
     }

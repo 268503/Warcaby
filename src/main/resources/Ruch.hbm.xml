@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="serwer.dto">
+    <class name="Ruch" table="Ruch">
+        <id name="id" column="id" type="int">
+            <generator class="native"/>
+        </id>
+        <property name="xPocz" column="xPocz" type="int"/>
+        <property name="yPocz" column="yPocz" type="int"/>
+        <property name="xKonc" column="xKonc" type="int"/>
+        <property name="yKonc" column="yKonc" type="int"/>
+        <property name="promocja" column="promocja" type="boolean"/>
+        <property name="typRuchu" column="typ_ruchu" type="int"/>
+        <property name="numerRuchuWPartii" column="numer_ruchu_w_partii" type="int"/>
+        <many-to-one name="partia" class="Partia"
+                     column="id_partii" not-null="true"/>
+    </class>
+</hibernate-mapping>

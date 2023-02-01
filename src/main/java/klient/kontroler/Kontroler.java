@@ -40,15 +40,25 @@ public class Kontroler implements Runnable {
                 if (odpowiedz.startsWith("INFO")) {
                     System.out.println(odpowiedz.substring(5));
                 }
-                else if (odpowiedz.startsWith("CZY_BOT")) {
+                else if (odpowiedz.startsWith("PODAJ_TYP_GRY")) {
                     Platform.runLater(() -> {
                         final TextInputDialog wprowadzanieWariantDialog = new TextInputDialog();
                         wprowadzanieWariantDialog.setTitle("Wariant");
                         wprowadzanieWariantDialog.setGraphic(null);
-                        wprowadzanieWariantDialog.setHeaderText("Czy grac z botem (1 tak 0 nie)");
+                        wprowadzanieWariantDialog.setHeaderText("Wybierz typ gry (0 - gra z człowiekiem, 1 - gra z botem, 2 - odtwarzanie partii)");
                         wprowadzanieWariantDialog.showAndWait();
                         final String wybor = wprowadzanieWariantDialog.getEditor().getText();
-                        doSerwera.println("BOT " + wybor);});
+                        doSerwera.println("TYP " + wybor);});
+                }
+                else if (odpowiedz.startsWith("PODAJ_ID_PARTII")) {
+                    Platform.runLater(() -> {
+                        final TextInputDialog wprowadzanieWariantDialog = new TextInputDialog();
+                        wprowadzanieWariantDialog.setTitle("ID partii");
+                        wprowadzanieWariantDialog.setGraphic(null);
+                        wprowadzanieWariantDialog.setHeaderText("Podaj ID partii");
+                        wprowadzanieWariantDialog.showAndWait();
+                        final String wybor = wprowadzanieWariantDialog.getEditor().getText();
+                        doSerwera.println("ID_PARTII " + wybor);});
                 }
                 else if (odpowiedz.startsWith("PODAJ_WARIANT")) {
                     Platform.runLater(() -> {
@@ -150,7 +160,6 @@ public class Kontroler implements Runnable {
         if (rozpoczetoGre) {
             doSerwera.println(komenda);
         }
-        // System.out.println("wysylam " + komenda);
     }
 
     private Kontroler() {}

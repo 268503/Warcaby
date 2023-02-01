@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="serwer.dto">
+    <class name="Wariant" table="Wariant">
+        <id name="id" column="id" type="int">
+            <generator class="native"/>
+        </id>
+        <property name="nazwa" column="nazwa" type="string"/>
+        <property name="wymiarPlanszy" column="wymiar_planszy" type="int"/>
+        <set name="partie" inverse="true" cascade="all">
+            <key column="id_wariantu" not-null="true" />
+            <one-to-many class="Partia"/>
+        </set>
+    </class>
+</hibernate-mapping>
